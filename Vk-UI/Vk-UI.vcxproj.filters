@@ -1,0 +1,93 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="Header Files">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hh;hpp;hxx;hm;inl;inc;ipp;xsd</Extensions>
+    </Filter>
+    <Filter Include="Resource Files">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+    <Filter Include="Header Files\Vk-Generator">
+      <UniqueIdentifier>{aba17947-f7ce-4bc7-aff5-d2a98790447f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Vulkan Resources">
+      <UniqueIdentifier>{7265ee46-e70f-4f33-8d96-67f9b6dc41e1}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\src\Main.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\App.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\InputManager.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\ImguiDemo.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\src\include\Vk-Generator\VkGenerator.hpp">
+      <Filter>Header Files\Vk-Generator</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\include\Vk-Generator\VkGenerator.ipp">
+      <Filter>Header Files\Vk-Generator</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\include\Command.h">
+      <Filter>Header Files\Vulkan Resources</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\include\Fence.h">
+      <Filter>Header Files\Vulkan Resources</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\include\FrameBuffer.h">
+      <Filter>Header Files\Vulkan Resources</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\include\GraphicsPipeline.h">
+      <Filter>Header Files\Vulkan Resources</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\include\RenderPass.h">
+      <Filter>Header Files\Vulkan Resources</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\include\RenderTarget.h">
+      <Filter>Header Files\Vulkan Resources</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\include\Semaphore.h">
+      <Filter>Header Files\Vulkan Resources</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\include\Shader.h">
+      <Filter>Header Files\Vulkan Resources</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\include\Swapchain.h">
+      <Filter>Header Files\Vulkan Resources</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\include\VulkanHelpers.h">
+      <Filter>Header Files\Vulkan Resources</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\include\VulkanObjects.h">
+      <Filter>Header Files\Vulkan Resources</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\include\App.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\include\Demo.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\include\InputManager.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\include\Logger.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\include\ImguiDemo.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+  </ItemGroup>
+</Project>
