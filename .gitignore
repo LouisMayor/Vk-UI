@@ -6,6 +6,9 @@
 # GLFW - 3.2.1 Win32
 src/include/glfw-3.2.1.bin.WIN32/
 
+# imgui - 1.70
+src/include/imgui-1.70/
+
 # User-specific files
 *.suo
 *.user
