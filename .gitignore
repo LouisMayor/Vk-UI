@@ -3,6 +3,9 @@
 ##
 ## Get latest from https://github.com/github/gitignore/blob/master/VisualStudio.gitignore
 
+# GLFW - 3.2.1 Win32
+src/include/glfw-3.2.1.bin.WIN32/
+
 # User-specific files
 *.suo
 *.user
