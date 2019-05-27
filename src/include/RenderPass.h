@@ -8,9 +8,11 @@ namespace VkRes
 		RenderPass() = default;
 
 		RenderPass(std::vector<vk::AttachmentDescription>& _attachments,
-		           vk::AttachmentReference* const          _colour_attachements, const uint32_t _colour_attachment_count,
+		           vk::AttachmentReference* const          _colour_attachements,
+		           const uint32_t                          _colour_attachment_count,
 		           vk::AttachmentReference* const          _depth_attachement,
-		           vk::AttachmentReference* const          _resolve_attachments, const uint32_t _resolve_attachment_count,
+		           vk::AttachmentReference* const          _resolve_attachments,
+		           const uint32_t                          _resolve_attachment_count,
 		           const vk::PipelineBindPoint             _bind_point,
 		           vk::Device                              _device)
 		{

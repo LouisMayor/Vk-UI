@@ -23,24 +23,32 @@ namespace VkRes
 			}
 		}
 
-		void SetInputAssembler(vk::VertexInputBindingDescription                _binding_desc,
+		void SetInputAssembler(vk::VertexInputBindingDescription*                _binding_desc,
 		                       std::vector<vk::VertexInputAttributeDescription> _attribute_desc,
 		                       vk::PrimitiveTopology                            _topology,
 		                       vk::Bool32                                       _primitive_restart)
 		{
-			m_vertex_binding_desc    = _binding_desc;
+			if (_binding_desc != nullptr)
+			{
+				m_vertex_binding_desc = *_binding_desc;
+			}
+			else
+			{
+				m_vertex_binding_desc = vk::VertexInputBindingDescription{};
+			}
+
 			m_vertex_attribute_descs = _attribute_desc;
 
 			m_vertex_input_state_create_info = vk::PipelineVertexInputStateCreateInfo
 			{
 				{},
-				0,
-				&m_vertex_binding_desc != nullptr ?
+				_binding_desc != nullptr ? 1u : 0u,
+				_binding_desc != nullptr ?
 					&m_vertex_binding_desc :
 					nullptr,
 				_attribute_desc.size(),
 				_attribute_desc.size() > 0 ?
-					_attribute_desc.data() :
+					m_vertex_attribute_descs.data() :
 					nullptr
 			};
 

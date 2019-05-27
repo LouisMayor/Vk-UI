@@ -126,4 +126,18 @@
       <Filter>Imgui</Filter>
     </ClInclude>
   </ItemGroup>
+  <ItemGroup>
+    <None Include="..\shaders\triangle_no_mesh.frag">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="..\shaders\triangle_no_mesh.vert">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="..\shaders\ui.frag">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="..\shaders\ui.vert">
+      <Filter>Resource Files</Filter>
+    </None>
+  </ItemGroup>
 </Project>

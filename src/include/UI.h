@@ -7,18 +7,18 @@ class UI
 public:
 	struct UIPushConstantData
 	{
-		// some data
+		float x, y, z, w; // dummy
 	} UIPushConstants;
 
 	UI() = default;
 
 	void Destroy(vk::Device);
 
-	void Init(float, float);
+	void Init(uint32_t, uint32_t);
 
-	void LoadResources(vk::Device, vk::PhysicalDevice, vk::RenderPass, vk::Queue);
+	void LoadResources(vk::Device, vk::PhysicalDevice, std::string_view, VkRes::Command, vk::RenderPass, vk::Queue);
 
-	void PrepNextFrame();
+	void PrepNextFrame(vk::Bool32);
 
 	void Update();
 
@@ -35,5 +35,8 @@ private:
 	vk::DescriptorPool      m_desc_pool;
 	vk::DescriptorSetLayout m_desc_set_layout;
 	vk::DescriptorSet       m_desc_set;
-	vk::Device              m_device;
+	VkRes::Shader           m_vert;
+	VkRes::Shader           m_frag;
+	float                   m_width;
+	float                   m_height;
 };

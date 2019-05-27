@@ -17,6 +17,9 @@ void VkImguiDemo::Setup()
 	RecordCmdBuffer();
 	CreateSyncObjects();
 
+	m_ui_instance.Init(m_swapchain.Extent().width, m_swapchain.Extent().height);
+	m_ui_instance.LoadResources(g_VkGenerator.Device(), g_VkGenerator.PhysicalDevice(), m_shader_directory, m_command, m_render_pass.Pass(), g_VkGenerator.GraphicsQueue());
+
 	m_app_instance.SetWindowTitle("Vulkan Triangle Demo");
 	m_app_instance.Start();
 }
@@ -42,6 +45,8 @@ void VkImguiDemo::Run()
 void VkImguiDemo::Shutdown()
 {
 	g_VkGenerator.Device().waitIdle();
+
+	m_ui_instance.Destroy(g_VkGenerator.Device());
 
 	for (int i = 0 ; i < MAX_FRAMES_IN_FLIGHT ; i++)
 	{
@@ -306,7 +311,7 @@ void VkImguiDemo::CreatePipelines()
 		m_frag.Set()
 	};
 
-	m_graphics_pipeline.SetInputAssembler({}, {}, vk::PrimitiveTopology::eTriangleList, VK_FALSE);
+	m_graphics_pipeline.SetInputAssembler(nullptr, {}, vk::PrimitiveTopology::eTriangleList, VK_FALSE);
 	m_graphics_pipeline.SetViewport(m_swapchain.Extent(), 0.0f, 1.0f);
 	m_graphics_pipeline.SetRasterizer(VK_TRUE, VK_TRUE, vk::CompareOp::eLess, vk::SampleCountFlagBits::e1, VK_FALSE);
 	m_graphics_pipeline.SetShaders(stages);

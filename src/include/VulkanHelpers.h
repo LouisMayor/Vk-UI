@@ -105,16 +105,14 @@ namespace VkRes
 		return _format == vk::Format::eD32SfloatS8Uint || _format == vk::Format::eD24UnormS8Uint;
 	}
 
-	static void TransitionImageLayout(vk::Device      _device,
-	                                  VkRes::Command  _cmd,
-	                                  vk::Queue       _queue,
-	                                  vk::Image       _image,
-	                                  vk::Format      _format,
-	                                  vk::ImageLayout _old_layout,
-	                                  vk::ImageLayout _new_layout,
-	                                  uint32_t        _mip_levels)
+	static void TransitionImageLayout(vk::CommandBuffer _cmd_buffer,
+	                                  vk::Image         _image,
+	                                  vk::Format        _format,
+	                                  vk::ImageLayout   _old_layout,
+	                                  vk::ImageLayout   _new_layout,
+	                                  uint32_t          _mip_levels)
 	{
-		auto buffer = _cmd.BeginSingleTimeCmds(_device);
+		const auto buffer = _cmd_buffer;
 
 		vk::ImageMemoryBarrier barrier = {};
 
@@ -187,6 +185,20 @@ namespace VkRes
 		}
 
 		buffer.pipelineBarrier(_src_stage, _dst_stage, {}, 0, nullptr, 0, nullptr, 1, &barrier);
+	}
+
+	static void TransitionImageLayout(vk::Device      _device,
+	                                  VkRes::Command  _cmd,
+	                                  vk::Queue       _queue,
+	                                  vk::Image       _image,
+	                                  vk::Format      _format,
+	                                  vk::ImageLayout _old_layout,
+	                                  vk::ImageLayout _new_layout,
+	                                  uint32_t        _mip_levels)
+	{
+		const auto buffer = _cmd.BeginSingleTimeCmds(_device);
+
+		TransitionImageLayout(buffer, _image, _format, _old_layout, _new_layout, _mip_levels);
 
 		_cmd.EndSingleTimeCmds(_device, buffer, _queue);
 	}

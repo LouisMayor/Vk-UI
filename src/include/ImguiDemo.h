@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Demo.h"
+#include "UI.h"
 
 class VkImguiDemo : public VkDemo
 {
@@ -74,6 +75,8 @@ private:
 	std::vector<VkRes::Fence>       m_inflight_fences;
 	std::vector<VkRes::Semaphore>   m_image_available_semaphores;
 	std::vector<VkRes::Semaphore>   m_render_finished_semaphores;
+
+	UI m_ui_instance;
 
 	bool m_multisampling = false;
 };

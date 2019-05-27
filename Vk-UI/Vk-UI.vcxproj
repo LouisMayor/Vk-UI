@@ -170,6 +170,12 @@
     <ClInclude Include="..\src\include\VulkanHelpers.h" />
     <ClInclude Include="..\src\include\VulkanObjects.h" />
   </ItemGroup>
+  <ItemGroup>
+    <None Include="..\shaders\triangle_no_mesh.frag" />
+    <None Include="..\shaders\triangle_no_mesh.vert" />
+    <None Include="..\shaders\ui.frag" />
+    <None Include="..\shaders\ui.vert" />
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>
