@@ -48,6 +48,9 @@
     <ClCompile Include="..\src\include\imgui-1.70\imgui_widgets.cpp">
       <Filter>Imgui</Filter>
     </ClCompile>
+    <ClCompile Include="..\src\include\imgui-1.70\imgui_demo.cpp">
+      <Filter>Imgui</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\src\include\Vk-Generator\VkGenerator.hpp">

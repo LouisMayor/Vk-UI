@@ -57,6 +57,32 @@ namespace VkRes
 			m_command_buffers[_command_buffer_index].endRenderPass();
 		}
 
+		void SetViewport(int _viewport, float _width, float _height, float minDepth, float maxDepth, int _command_buffer_index)
+		{
+			vk::Viewport viewport =
+			{
+				0.0f,
+				0.0f,
+				_width,
+				_height,
+				minDepth,
+				maxDepth
+			};
+
+			m_command_buffers[_command_buffer_index].setViewport(_viewport, 1, &viewport);
+		}
+
+		void SetScissor(int _scissor, float _width, float _height, int _command_buffer_index)
+		{
+			vk::Rect2D scissor =
+			{
+				{static_cast<uint32_t>(0.0f), static_cast<uint32_t>(0.0f)},
+				{static_cast<uint32_t>(_width), static_cast<uint32_t>(_height)}
+			};
+
+			m_command_buffers[_command_buffer_index].setScissor(_scissor, 1, &scissor);
+		}
+
 		void BindPipeline(vk::PipelineBindPoint _bind_point, vk::Pipeline _pipeline, int _command_buffer_index)
 		{
 			m_command_buffers[_command_buffer_index].bindPipeline(_bind_point, _pipeline);
@@ -77,7 +103,7 @@ namespace VkRes
 		}
 
 		template <typename T> void PushConstants(const T&                        _mapped_data,
-		                                         const vk::PipelineBindPoint     _pipelineLayout,
+		                                         const vk::PipelineLayout        _pipelineLayout,
 		                                         const vk::ShaderStageFlagBits&& _shaderStageFlag,
 		                                         int                             _command_buffer_index)
 		{

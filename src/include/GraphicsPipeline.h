@@ -23,7 +23,7 @@ namespace VkRes
 			}
 		}
 
-		void SetInputAssembler(vk::VertexInputBindingDescription*                _binding_desc,
+		void SetInputAssembler(const vk::VertexInputBindingDescription*         _binding_desc,
 		                       std::vector<vk::VertexInputAttributeDescription> _attribute_desc,
 		                       vk::PrimitiveTopology                            _topology,
 		                       vk::Bool32                                       _primitive_restart)
@@ -42,12 +42,14 @@ namespace VkRes
 			m_vertex_input_state_create_info = vk::PipelineVertexInputStateCreateInfo
 			{
 				{},
-				_binding_desc != nullptr ? 1u : 0u,
+				_binding_desc != nullptr ?
+					1u :
+					0u,
 				_binding_desc != nullptr ?
 					&m_vertex_binding_desc :
 					nullptr,
 				_attribute_desc.size(),
-				_attribute_desc.size() > 0 ?
+				!_attribute_desc.empty() ?
 					m_vertex_attribute_descs.data() :
 					nullptr
 			};
@@ -98,8 +100,8 @@ namespace VkRes
 				VK_FALSE,
 				VK_FALSE,
 				vk::PolygonMode::eFill,
-				vk::CullModeFlagBits::eBack,
-				vk::FrontFace::eClockwise,
+				vk::CullModeFlagBits::eNone, // test - eBack
+				vk::FrontFace::eClockwise, // test eClockwise
 				VK_FALSE,
 				0.0f,
 				0.0f,
@@ -134,11 +136,11 @@ namespace VkRes
 
 			m_colour_blend_attachement = vk::PipelineColorBlendAttachmentState
 			{
-				VK_FALSE,
-				vk::BlendFactor::eZero,
-				vk::BlendFactor::eZero,
+				VK_TRUE,
+				vk::BlendFactor::eSrcAlpha,
+				vk::BlendFactor::eOneMinusSrcAlpha,
 				vk::BlendOp::eAdd,
-				vk::BlendFactor::eZero,
+				vk::BlendFactor::eOneMinusSrcAlpha,
 				vk::BlendFactor::eZero,
 				vk::BlendOp::eAdd,
 				vk::ColorComponentFlagBits::eR | vk::ColorComponentFlagBits::eG |
@@ -215,6 +217,15 @@ namespace VkRes
 				return;
 			}
 
+			vk::PipelineDynamicStateCreateInfo dynamic_state;
+			std::vector<vk::DynamicState>      states =
+			{
+				vk::DynamicState::eViewport,
+				vk::DynamicState::eScissor
+			};
+			dynamic_state.dynamicStateCount = states.size();
+			dynamic_state.pDynamicStates = states.data();
+
 			m_graphics_pipeline_create_info = vk::GraphicsPipelineCreateInfo
 			{
 				{},
@@ -228,7 +239,7 @@ namespace VkRes
 				&m_multisample_state_create_info,
 				&m_depth_stencil_state_create_info,
 				&m_colour_blend_create_info,
-				nullptr,
+				&dynamic_state,
 				m_layout,
 				_render_pass,
 				0,

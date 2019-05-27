@@ -136,6 +136,7 @@
   <ItemGroup>
     <ClCompile Include="..\src\App.cpp" />
     <ClCompile Include="..\src\include\imgui-1.70\imgui.cpp" />
+    <ClCompile Include="..\src\include\imgui-1.70\imgui_demo.cpp" />
     <ClCompile Include="..\src\include\imgui-1.70\imgui_draw.cpp" />
     <ClCompile Include="..\src\include\imgui-1.70\imgui_widgets.cpp" />
     <ClCompile Include="..\src\InputManager.cpp" />

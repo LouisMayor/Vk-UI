@@ -14,11 +14,11 @@ void VkImguiDemo::Setup()
 	CreateFrameBuffers();
 	CreateShaders();
 	CreatePipelines();
-	RecordCmdBuffer();
 	CreateSyncObjects();
 
 	m_ui_instance.Init(m_swapchain.Extent().width, m_swapchain.Extent().height);
-	m_ui_instance.LoadResources(g_VkGenerator.Device(), g_VkGenerator.PhysicalDevice(), m_shader_directory, m_command, m_render_pass.Pass(), g_VkGenerator.GraphicsQueue());
+	m_ui_instance.LoadResources(g_VkGenerator.Device(), g_VkGenerator.PhysicalDevice(), m_shader_directory, m_command,
+	                            m_render_pass.Pass(), g_VkGenerator.GraphicsQueue());
 
 	m_app_instance.SetWindowTitle("Vulkan Triangle Demo");
 	m_app_instance.Start();
@@ -38,6 +38,7 @@ void VkImguiDemo::Run()
 		m_app_instance.Update(delta);
 		stop_execution = m_app_instance.ShouldStop();
 
+		RecordCmdBuffer();
 		SubmitQueue();
 	}
 }
@@ -181,6 +182,8 @@ void VkImguiDemo::CreateSyncObjects()
 
 void VkImguiDemo::RecordCmdBuffer()
 {
+	g_VkGenerator.Device().waitIdle();
+
 	vk::CommandBufferBeginInfo begin_info =
 	{
 		vk::CommandBufferUsageFlagBits::eSimultaneousUse,
@@ -191,6 +194,9 @@ void VkImguiDemo::RecordCmdBuffer()
 	clear_values[0].color.setFloat32({0.0f, 0.0f, 0.0f, 1.0f});
 	clear_values[1].depthStencil.setDepth(1.0f);
 	clear_values[1].depthStencil.setStencil(0);
+
+	m_ui_instance.PrepNextFrame();
+	m_ui_instance.Update(g_VkGenerator.Device(), g_VkGenerator.PhysicalDevice());
 
 	for (auto buffer_index = 0 ; buffer_index < m_command.CommandBufferCount() ; ++buffer_index)
 	{
@@ -207,9 +213,15 @@ void VkImguiDemo::RecordCmdBuffer()
 
 		m_command.BeginRenderPass(&render_pass_begin_info, vk::SubpassContents::eInline, buffer_index);
 
+		m_command.SetViewport(0, m_swapchain.Extent().width, m_swapchain.Extent().height, 0.0f, 1.0f, buffer_index);
+		
+		m_command.SetScissor(0, m_swapchain.Extent().width, m_swapchain.Extent().height, buffer_index);
+		
 		m_command.BindPipeline(vk::PipelineBindPoint::eGraphics, m_graphics_pipeline.Pipeline(), buffer_index);
 
 		m_command.Draw(3, 1, 0, 0, buffer_index);
+
+		m_ui_instance.Draw(m_command, buffer_index);
 
 		m_command.EndRenderPass(buffer_index);
 
