@@ -67,10 +67,10 @@ void VkImguiDemo::Shutdown()
 	m_app_instance.Close();
 }
 
-VkBool32 VkImguiDemo::TriangleDemoDebugCallback(VkDebugUtilsMessageSeverityFlagBitsEXT      _message_severity,
-                                                   VkDebugUtilsMessageTypeFlagsEXT             _message_type,
-                                                   const VkDebugUtilsMessengerCallbackDataEXT* _p_callback_data,
-                                                   void*                                       _p_user_data)
+VkBool32 VkImguiDemo::DebugCallback(VkDebugUtilsMessageSeverityFlagBitsEXT      _message_severity,
+                                    VkDebugUtilsMessageTypeFlagsEXT             _message_type,
+                                    const VkDebugUtilsMessengerCallbackDataEXT* _p_callback_data,
+                                    void*                                       _p_user_data)
 {
 	std::string message = "validation layer: ";
 	if (_message_severity == VK_DEBUG_UTILS_MESSAGE_SEVERITY_ERROR_BIT_EXT)
@@ -281,21 +281,21 @@ void VkImguiDemo::CreateFrameBuffers()
 
 void VkImguiDemo::CreateShaders()
 {
-	if( m_shader_directory.empty( ) )
+	if (m_shader_directory.empty())
 	{
-		g_Logger.Error( "No Shader Directory has been set" );
+		g_Logger.Error("No Shader Directory has been set");
 		return;
 	}
 
-	m_vert = VkRes::Shader( g_VkGenerator.Device( ),
-							vk::ShaderStageFlagBits::eVertex,
-							m_shader_directory,
-							"triangle_no_mesh.vert.spv" );
+	m_vert = VkRes::Shader(g_VkGenerator.Device(),
+	                       vk::ShaderStageFlagBits::eVertex,
+	                       m_shader_directory,
+	                       "triangle_no_mesh.vert.spv");
 
-	m_frag = VkRes::Shader( g_VkGenerator.Device( ),
-							vk::ShaderStageFlagBits::eFragment,
-							m_shader_directory,
-							"triangle_no_mesh.frag.spv" );
+	m_frag = VkRes::Shader(g_VkGenerator.Device(),
+	                       vk::ShaderStageFlagBits::eFragment,
+	                       m_shader_directory,
+	                       "triangle_no_mesh.frag.spv");
 }
 
 void VkImguiDemo::CreatePipelines()
@@ -340,9 +340,9 @@ void VkImguiDemo::CleanSwapchain()
 	m_command.FreeCommandBuffers(device);
 	m_graphics_pipeline.Destroy(device);
 	m_render_pass.Destroy(device);
-	for( auto& i : m_framebuffers )
+	for (auto& i : m_framebuffers)
 	{
-		i.Destroy( g_VkGenerator.Device( ) );
+		i.Destroy(g_VkGenerator.Device());
 	}
 	m_swapchain.Destroy(device);
 }
@@ -362,11 +362,11 @@ void VkImguiDemo::RecreateSwapchain()
 	CleanSwapchain();
 	CreateSwapchain();
 	CreateCmdBuffers();
-	CreateColourResources( );
-	CreateDepthResources( ); // Not created for this program
-	CreateRenderPasses( );
+	CreateColourResources();
+	CreateDepthResources(); // Not created for this program
+	CreateRenderPasses();
 	CreateFrameBuffers();
-	CreatePipelines( );
+	CreatePipelines();
 
 	RecordCmdBuffer();
 }

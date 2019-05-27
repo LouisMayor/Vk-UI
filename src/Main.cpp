@@ -10,7 +10,7 @@ int main()
 	g_Logger.Create(cmd_handle);
 	g_Logger.Info("Logger Created");
 	g_VkGenerator.RequireValidation(true);
-	g_VkGenerator.AddValidationLayerCallback(VkImguiDemo::TriangleDemoDebugCallback);
+	g_VkGenerator.AddValidationLayerCallback(VkImguiDemo::DebugCallback);
 #endif
 
 	g_VkGenerator.LogStateOnInitisation(true);

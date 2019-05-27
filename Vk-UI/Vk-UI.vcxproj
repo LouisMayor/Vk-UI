@@ -81,7 +81,7 @@
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(VULKAN_SDK)\Include;$(SolutionDir)..\src\include\glfw-3.2.1.bin.WIN32\include\GLFW\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(VULKAN_SDK)\Include;$(SolutionDir)..\src\include\glfw-3.2.1.bin.WIN32\include\GLFW\;$(SolutionDir)..\src\include\imgui-1.70\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
     <Link>
@@ -108,7 +108,7 @@
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(VULKAN_SDK)\Include;$(SolutionDir)..\src\include\glfw-3.2.1.bin.WIN32\include\GLFW\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(VULKAN_SDK)\Include;$(SolutionDir)..\src\include\glfw-3.2.1.bin.WIN32\include\GLFW\;$(SolutionDir)..\src\include\imgui-1.70\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
     <Link>
@@ -135,9 +135,13 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="..\src\App.cpp" />
+    <ClCompile Include="..\src\include\imgui-1.70\imgui.cpp" />
+    <ClCompile Include="..\src\include\imgui-1.70\imgui_draw.cpp" />
+    <ClCompile Include="..\src\include\imgui-1.70\imgui_widgets.cpp" />
     <ClCompile Include="..\src\InputManager.cpp" />
     <ClCompile Include="..\src\Main.cpp" />
     <ClCompile Include="..\src\ImguiDemo.cpp" />
+    <ClCompile Include="..\src\UI.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\src\include\App.h" />
@@ -146,6 +150,13 @@
     <ClInclude Include="..\src\include\Fence.h" />
     <ClInclude Include="..\src\include\FrameBuffer.h" />
     <ClInclude Include="..\src\include\GraphicsPipeline.h" />
+    <ClInclude Include="..\src\include\imgui-1.70\imconfig.h" />
+    <ClInclude Include="..\src\include\imgui-1.70\imgui.h" />
+    <ClInclude Include="..\src\include\imgui-1.70\imgui_internal.h" />
+    <ClInclude Include="..\src\include\imgui-1.70\imstb_rectpack.h" />
+    <ClInclude Include="..\src\include\imgui-1.70\imstb_textedit.h" />
+    <ClInclude Include="..\src\include\imgui-1.70\imstb_truetype.h" />
+    <ClInclude Include="..\src\include\UI.h" />
     <ClInclude Include="..\src\include\InputManager.h" />
     <ClInclude Include="..\src\include\Logger.h" />
     <ClInclude Include="..\src\include\RenderPass.h" />

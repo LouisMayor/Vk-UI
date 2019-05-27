@@ -1,8 +1,10 @@
 #pragma once
 
-#include "Command.h"
+#include "Logger.h"
 
 extern Logger g_Logger;
+
+#include "Command.h"
 
 namespace VkRes
 {
@@ -187,5 +189,43 @@ namespace VkRes
 		buffer.pipelineBarrier(_src_stage, _dst_stage, {}, 0, nullptr, 0, nullptr, 1, &barrier);
 
 		_cmd.EndSingleTimeCmds(_device, buffer, _queue);
+	}
+
+	static std::tuple<vk::Buffer, vk::DeviceMemory> CreateBuffer(vk::Device              _device,
+	                                                             vk::PhysicalDevice      _physical_device,
+	                                                             vk::DeviceSize          _size,
+	                                                             vk::BufferUsageFlags    _usage_flags,
+	                                                             vk::MemoryPropertyFlags _mem_flags)
+
+	{
+		const vk::BufferCreateInfo create_info =
+		{
+			{},
+			_size,
+			_usage_flags,
+			vk::SharingMode::eExclusive
+		};
+
+		vk::Buffer buffer;
+
+		const auto buffer_result = _device.createBuffer(&create_info, nullptr, &buffer);
+		assert(("Failed to create buffer", buffer_result == vk::Result::eSuccess));
+
+		const auto mem_requirements = _device.getBufferMemoryRequirements(buffer);
+
+		const vk::MemoryAllocateInfo alloc_info =
+		{
+			mem_requirements.size,
+			FindMemoryType(_physical_device, mem_requirements.memoryTypeBits, _mem_flags)
+		};
+
+		vk::DeviceMemory memory;
+
+		const auto alloc_result = _device.allocateMemory(&alloc_info, nullptr, &memory);
+		assert(("Failed to allocate memory", alloc_result == vk::Result::eSuccess));
+
+		_device.bindBufferMemory(buffer, memory, 0);
+
+		return std::make_tuple(buffer, memory);
 	}
 }

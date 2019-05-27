@@ -1,11 +1,11 @@
 #pragma once
 
+#include "Vk-Generator/VkGenerator.hpp"
+#include "VulkanHelpers.h"
+
 #undef max // Window's max() conflict with <limits>' numeric_limits' max()
 
 #include <limits>
-
-#include "Vk-Generator/VkGenerator.hpp"
-#include "VulkanHelpers.h"
 
 namespace VkRes
 {

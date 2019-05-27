@@ -1,7 +1,5 @@
 #pragma once
 
-extern Logger g_Logger;
-
 namespace VkRes
 {
 	class GraphicsPipeline

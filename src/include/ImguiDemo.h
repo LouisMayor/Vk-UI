@@ -28,10 +28,10 @@ public:
 
 	void Shutdown() override;
 
-	static VKAPI_ATTR VkBool32 VKAPI_CALL TriangleDemoDebugCallback(VkDebugUtilsMessageSeverityFlagBitsEXT      _message_severity,
-	                                                                VkDebugUtilsMessageTypeFlagsEXT             _message_type,
-	                                                                const VkDebugUtilsMessengerCallbackDataEXT* _p_callback_data,
-	                                                                void*                                       _p_user_data);
+	static VKAPI_ATTR VkBool32 VKAPI_CALL DebugCallback(VkDebugUtilsMessageSeverityFlagBitsEXT      _message_severity,
+	                                                    VkDebugUtilsMessageTypeFlagsEXT             _message_type,
+	                                                    const VkDebugUtilsMessengerCallbackDataEXT* _p_callback_data,
+	                                                    void*                                       _p_user_data);
 
 private:
 
@@ -61,7 +61,7 @@ private:
 
 	void RecreateSwapchain() override;
 
-	void CreateCmdBuffers( ) override;
+	void CreateCmdBuffers() override;
 
 	VkRes::Swapchain                m_swapchain;
 	VkRes::Command                  m_command;
