@@ -15,9 +15,9 @@ void VkApp::Start()
 	const int x = glfwGetVideoMode(glfwGetPrimaryMonitor())->width;
 	SetWindowPos(GetConsoleWindow(), 0, x - 1024, 0, 0, 0, SWP_NOSIZE | SWP_NOZORDER);
 	g_Logger.Info("VkApp::Start() Executed");
-#else
-	glfwSetInputMode(g_VkGenerator.WindowHdle(), GLFW_CURSOR, GLFW_CURSOR_NORMAL);
 #endif
+
+	glfwSetInputMode(g_VkGenerator.WindowHdle(), GLFW_CURSOR, GLFW_CURSOR_NORMAL);
 }
 
 void VkApp::Update(float _delta)

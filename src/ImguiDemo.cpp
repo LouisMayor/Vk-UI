@@ -16,7 +16,7 @@ void VkImguiDemo::Setup()
 	CreatePipelines();
 	CreateSyncObjects();
 
-	m_ui_instance.Init(m_swapchain.Extent().width, m_swapchain.Extent().height);
+	m_ui_instance.Init(m_swapchain.Extent().width, m_swapchain.Extent().height, g_VkGenerator.WindowHdle());
 	m_ui_instance.LoadResources(g_VkGenerator.Device(), g_VkGenerator.PhysicalDevice(), m_shader_directory, m_command,
 	                            m_render_pass.Pass(), g_VkGenerator.GraphicsQueue());
 
@@ -194,6 +194,9 @@ void VkImguiDemo::RecordCmdBuffer()
 	clear_values[0].color.setFloat32({0.0f, 0.0f, 0.0f, 1.0f});
 	clear_values[1].depthStencil.setDepth(1.0f);
 	clear_values[1].depthStencil.setStencil(0);
+
+	double x = 0.0f, y = 0.0f;
+	glfwGetCursorPos(g_VkGenerator.WindowHdle(), &x, &y);
 
 	m_ui_instance.PrepNextFrame();
 	m_ui_instance.Update(g_VkGenerator.Device(), g_VkGenerator.PhysicalDevice());

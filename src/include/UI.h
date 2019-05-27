@@ -20,7 +20,7 @@ public:
 
 	void Destroy(vk::Device);
 
-	void Init(uint32_t, uint32_t);
+	void Init(uint32_t, uint32_t, GLFWwindow*);
 
 	void LoadResources(vk::Device, vk::PhysicalDevice, std::string_view, VkRes::Command, vk::RenderPass, vk::Queue);
 
