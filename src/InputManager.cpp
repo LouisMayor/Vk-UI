@@ -28,9 +28,10 @@ void InputManager::InitialiseInput(GLFWwindow* _window)
 		g_AllKeyStates[i] = EKeyState::NotPressed;
 	}
 
-	glfwSetKeyCallback(_window, KeyEvent);
-	glfwSetCursorPosCallback(_window, nullptr);
-	glfwSetInputMode(_window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
+	// Imgui
+	// glfwSetKeyCallback(_window, KeyEvent);
+	// glfwSetCursorPosCallback(_window, nullptr);
+	// glfwSetInputMode(_window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
 }
 
 bool InputManager::KeyHeld(EKeyCodes _key_code)

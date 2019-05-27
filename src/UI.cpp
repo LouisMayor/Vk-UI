@@ -197,6 +197,30 @@ void UI::Init(uint32_t _width, uint32_t _height, GLFWwindow* _window)
 	io.WantCaptureMouse        = true;
 	io.WantSetMousePos         = true;
 	io.MouseDrawCursor         = true;
+	io.WantCaptureKeyboard     = true;
+	io.WantTextInput           = true;
+
+	io.KeyMap[ImGuiKey_Tab]        = GLFW_KEY_TAB;
+	io.KeyMap[ImGuiKey_LeftArrow]  = GLFW_KEY_LEFT;
+	io.KeyMap[ImGuiKey_RightArrow] = GLFW_KEY_RIGHT;
+	io.KeyMap[ImGuiKey_UpArrow]    = GLFW_KEY_UP;
+	io.KeyMap[ImGuiKey_DownArrow]  = GLFW_KEY_DOWN;
+	io.KeyMap[ImGuiKey_PageUp]     = GLFW_KEY_PAGE_UP;
+	io.KeyMap[ImGuiKey_PageDown]   = GLFW_KEY_PAGE_DOWN;
+	io.KeyMap[ImGuiKey_Home]       = GLFW_KEY_HOME;
+	io.KeyMap[ImGuiKey_End]        = GLFW_KEY_END;
+	io.KeyMap[ImGuiKey_Insert]     = GLFW_KEY_INSERT;
+	io.KeyMap[ImGuiKey_Delete]     = GLFW_KEY_DELETE;
+	io.KeyMap[ImGuiKey_Backspace]  = GLFW_KEY_BACKSPACE;
+	io.KeyMap[ImGuiKey_Space]      = GLFW_KEY_SPACE;
+	io.KeyMap[ImGuiKey_Enter]      = GLFW_KEY_ENTER;
+	io.KeyMap[ImGuiKey_Escape]     = GLFW_KEY_ESCAPE;
+	io.KeyMap[ImGuiKey_A]          = GLFW_KEY_A;
+	io.KeyMap[ImGuiKey_C]          = GLFW_KEY_C;
+	io.KeyMap[ImGuiKey_V]          = GLFW_KEY_V;
+	io.KeyMap[ImGuiKey_X]          = GLFW_KEY_X;
+	io.KeyMap[ImGuiKey_Y]          = GLFW_KEY_Y;
+	io.KeyMap[ImGuiKey_Z]          = GLFW_KEY_Z;
 
 	g_MouseCursors[ImGuiMouseCursor_Arrow]      = glfwCreateStandardCursor(GLFW_ARROW_CURSOR);
 	g_MouseCursors[ImGuiMouseCursor_TextInput]  = glfwCreateStandardCursor(GLFW_IBEAM_CURSOR);
@@ -207,10 +231,6 @@ void UI::Init(uint32_t _width, uint32_t _height, GLFWwindow* _window)
 	g_MouseCursors[ImGuiMouseCursor_ResizeNWSE] = glfwCreateStandardCursor(GLFW_ARROW_CURSOR); // FIXME: GLFW doesn't have this.
 	g_MouseCursors[ImGuiMouseCursor_Hand]       = glfwCreateStandardCursor(GLFW_HAND_CURSOR);
 
-	g_PrevUserCallbackMousebutton = NULL;
-	g_PrevUserCallbackScroll      = NULL;
-	g_PrevUserCallbackKey         = NULL;
-	g_PrevUserCallbackChar        = NULL;
 	g_PrevUserCallbackMousebutton = glfwSetMouseButtonCallback(_window, ImGui_ImplGlfw_MouseButtonCallback);
 	g_PrevUserCallbackScroll      = glfwSetScrollCallback(_window, ImGui_ImplGlfw_ScrollCallback);
 	g_PrevUserCallbackKey         = glfwSetKeyCallback(_window, ImGui_ImplGlfw_KeyCallback);
