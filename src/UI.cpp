@@ -44,7 +44,7 @@ void UI::LoadResources(vk::Device _device, vk::PhysicalDevice _physical_device, 
 	unsigned char* fontData;
 	int            texWidth, texHeight;
 	io.Fonts->GetTexDataAsRGBA32(&fontData, &texWidth, &texHeight);
-	VkDeviceSize uploadSize = texWidth * texHeight * 4 * sizeof(char);
+	const vk::DeviceSize uploadSize = texWidth * texHeight * 4 * sizeof(char);
 	
 	const auto image_data = VkRes::CreateImage(_device,
 	                                           _physical_device,
