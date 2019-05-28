@@ -490,7 +490,7 @@ void UI::PrepNextFrame()
 
 	ImGui::TextUnformatted("Imgui Example");
 
-	std::string cursor = "x: " + std::to_string(ImGui::GetCursorPos().x) + " | y: " + std::to_string(ImGui::GetCursorPos().y);
+	std::string cursor = "x: " + std::to_string(ImGui::GetMousePos().x) + " | y: " + std::to_string(ImGui::GetMousePos().y);
 	ImGui::TextUnformatted(cursor.c_str());
 
 	ImGui::TextUnformatted(std::to_string(ImGui::GetTime()).c_str());
