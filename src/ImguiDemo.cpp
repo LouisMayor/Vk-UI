@@ -20,7 +20,7 @@ void VkImguiDemo::Setup()
 	m_ui_instance.LoadResources(g_VkGenerator.Device(), g_VkGenerator.PhysicalDevice(), m_shader_directory, m_command,
 	                            m_render_pass.Pass(), g_VkGenerator.GraphicsQueue());
 
-	m_app_instance.SetWindowTitle("Vulkan Triangle Demo");
+	m_app_instance.SetWindowTitle("Vulkan ImGui Triangle Demo");
 	m_app_instance.Start();
 }
 
@@ -31,11 +31,11 @@ void VkImguiDemo::Run()
 
 	while (!stop_execution)
 	{
-		const float total_time = static_cast<float>(glfwGetTime());
-		const float delta      = total_time - init_time;
-		init_time              = total_time;
+		m_total_time    = static_cast<float>(glfwGetTime());
+		m_frame_delta	= m_total_time - init_time;
+		init_time       = m_total_time;
 
-		m_app_instance.Update(delta);
+		m_app_instance.Update(m_frame_delta);
 		stop_execution = m_app_instance.ShouldStop();
 
 		RecordCmdBuffer();
@@ -195,10 +195,7 @@ void VkImguiDemo::RecordCmdBuffer()
 	clear_values[1].depthStencil.setDepth(1.0f);
 	clear_values[1].depthStencil.setStencil(0);
 
-	double x = 0.0f, y = 0.0f;
-	glfwGetCursorPos(g_VkGenerator.WindowHdle(), &x, &y);
-
-	m_ui_instance.PrepNextFrame();
+	m_ui_instance.PrepNextFrame(m_frame_delta, m_total_time);
 	m_ui_instance.Update(g_VkGenerator.Device(), g_VkGenerator.PhysicalDevice());
 
 	for (auto buffer_index = 0 ; buffer_index < m_command.CommandBufferCount() ; ++buffer_index)

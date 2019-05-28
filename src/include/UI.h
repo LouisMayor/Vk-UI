@@ -24,7 +24,7 @@ public:
 
 	void LoadResources(vk::Device, vk::PhysicalDevice, std::string_view, VkRes::Command, vk::RenderPass, vk::Queue);
 
-	void PrepNextFrame();
+	void PrepNextFrame(float, float);
 
 	void Update(vk::Device, vk::PhysicalDevice);
 

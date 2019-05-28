@@ -481,7 +481,7 @@ void UI::LoadResources(vk::Device         _device,
 	m_pipeline.CreateGraphicPipeline(_device, _pass);
 }
 
-void UI::PrepNextFrame()
+void UI::PrepNextFrame(float _delta, float _total_time)
 {
 	ImGui::NewFrame();
 
@@ -493,7 +493,8 @@ void UI::PrepNextFrame()
 	std::string cursor = "x: " + std::to_string(ImGui::GetMousePos().x) + " | y: " + std::to_string(ImGui::GetMousePos().y);
 	ImGui::TextUnformatted(cursor.c_str());
 
-	ImGui::TextUnformatted(std::to_string(ImGui::GetTime()).c_str());
+	std::string time = "time: " + std::to_string(_total_time);
+	ImGui::TextUnformatted(time.c_str());
 
 	ImGui::SetNextWindowSize(ImVec2(200, 200), ImGuiSetCond_FirstUseEver);
 	ImGui::Begin("Example settings");
