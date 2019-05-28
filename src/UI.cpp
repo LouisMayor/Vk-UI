@@ -553,14 +553,11 @@ void UI::ValidateData()
 {
 	if (Settings.sample_level != DummySettings.sample_level)
 	{
-		if (DummySettings.sample_level < 16)
+		if (DummySettings.sample_level > 0)
 		{
-			if (DummySettings.sample_level > 0)
-			{
-				Settings.sample_level = static_cast<int>(SampleCount(DummySettings.sample_level));
-			}
-			DummySettings.sample_level = Settings.sample_level;
+			Settings.sample_level = static_cast<int>(SampleCount(DummySettings.sample_level));
 		}
+		DummySettings.sample_level = Settings.sample_level;
 	}
 
 	Settings.use_msaa = DummySettings.use_msaa;
