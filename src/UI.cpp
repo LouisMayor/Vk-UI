@@ -513,8 +513,8 @@ void UI::PrepNextFrame(float _delta, float _total_time)
 
 	ImGui::SetNextWindowSize(ImVec2(0, 0), ImGuiSetCond_FirstUseEver);
 	ImGui::Begin("Settings");
-	ImGui::Checkbox("Enable Multi-sampling", &DummySettings.use_msaa);
-	ImGui::SliderInt("Sample Level", &DummySettings.sample_level, 0, 16);
+	ImGui::Checkbox("Enable Multi-sampling", &local_settings.use_msaa);
+	ImGui::SliderInt("Sample Level", &local_settings.sample_level, 0, 16);
 	ImGui::End();
 
 	ImGui::SetNextWindowSize(ImVec2(200, 200), ImGuiSetCond_FirstUseEver);
@@ -531,36 +531,23 @@ void UI::PrepNextFrame(float _delta, float _total_time)
 	ImGui::SetNextWindowPos(ImVec2(650, 20), ImGuiSetCond_FirstUseEver);
 	ImGui::ShowDemoWindow();
 
-	ValidateData();
+	UpdateSettings();
 
 	ImGui::Render();
 }
 
-// https://graphics.stanford.edu/~seander/bithacks.html#RoundUpPowerOf2
-unsigned long SampleCount(unsigned long v)
+void UI::UpdateSettings()
 {
-	v--;
-	v |= v >> 1;
-	v |= v >> 2;
-	v |= v >> 4;
-	v |= v >> 8;
-	v |= v >> 16;
-	v++;
-	return v;
-}
-
-void UI::ValidateData()
-{
-	if (Settings.sample_level != DummySettings.sample_level)
+	if (Settings::Instance()->sample_level != local_settings.sample_level)
 	{
-		if (DummySettings.sample_level > 0)
+		if (local_settings.sample_level > 0)
 		{
-			Settings.sample_level = static_cast<int>(SampleCount(DummySettings.sample_level));
+			Settings::Instance()->SetSampleCount(local_settings.sample_level);
 		}
-		DummySettings.sample_level = Settings.sample_level;
+		local_settings.sample_level = Settings::Instance()->sample_level;
 	}
-
-	Settings.use_msaa = DummySettings.use_msaa;
+	
+	Settings::Instance()->SetMSAA(local_settings.use_msaa);
 }
 
 void UI::Update(vk::Device _device, vk::PhysicalDevice _physical_device)

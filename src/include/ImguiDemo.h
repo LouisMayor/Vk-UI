@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Demo.h"
+#include "Settings.h"
 #include "UI.h"
 
 class VkImguiDemo : public VkDemo
@@ -77,8 +78,6 @@ private:
 	std::vector<VkRes::Semaphore>   m_render_finished_semaphores;
 
 	UI m_ui_instance;
-
-	bool m_multisampling = false;
 
 	float m_total_time;
 	float m_frame_delta;

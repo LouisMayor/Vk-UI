@@ -31,9 +31,9 @@ void VkImguiDemo::Run()
 
 	while (!stop_execution)
 	{
-		m_total_time    = static_cast<float>(glfwGetTime());
-		m_frame_delta	= m_total_time - init_time;
-		init_time       = m_total_time;
+		m_total_time  = static_cast<float>(glfwGetTime());
+		m_frame_delta = m_total_time - init_time;
+		init_time     = m_total_time;
 
 		m_app_instance.Update(m_frame_delta);
 		stop_execution = m_app_instance.ShouldStop();
@@ -214,9 +214,9 @@ void VkImguiDemo::RecordCmdBuffer()
 		m_command.BeginRenderPass(&render_pass_begin_info, vk::SubpassContents::eInline, buffer_index);
 
 		m_command.SetViewport(0, m_swapchain.Extent().width, m_swapchain.Extent().height, 0.0f, 1.0f, buffer_index);
-		
+
 		m_command.SetScissor(0, m_swapchain.Extent().width, m_swapchain.Extent().height, buffer_index);
-		
+
 		m_command.BindPipeline(vk::PipelineBindPoint::eGraphics, m_graphics_pipeline.Pipeline(), buffer_index);
 
 		m_command.Draw(3, 1, 0, 0, buffer_index);
@@ -264,7 +264,9 @@ void VkImguiDemo::CreateRenderPasses()
 		m_backbuffer.GetAttachmentDesc()
 	};
 
-	if (m_multisampling)
+	// TODO: Multi sampling
+	const bool msaa = false;// Settings::Instance()->use_msaa;
+	if (msaa)
 	{
 		attachments.emplace_back(m_backbuffer.GetResolveAttachmentDesc());
 	}
@@ -272,7 +274,7 @@ void VkImguiDemo::CreateRenderPasses()
 	m_render_pass = VkRes::RenderPass(attachments,
 	                                  &colour_attachment, 1,
 	                                  nullptr,
-	                                  m_multisampling ?
+	                                  msaa ?
 		                                  &colour_resolve_attachment :
 		                                  nullptr, 1,
 	                                  vk::PipelineBindPoint::eGraphics, g_VkGenerator.Device());
@@ -333,12 +335,15 @@ void VkImguiDemo::CreatePipelines()
 
 void VkImguiDemo::CreateColourResources()
 {
+	// TODO: Multi sampling
+	const bool msaa = false;// Settings::Instance()->use_msaa;
+
 	m_backbuffer = VkRes::RenderTarget(g_VkGenerator.PhysicalDevice(), g_VkGenerator.Device(),
 	                                   m_swapchain.Extent().width, m_swapchain.Extent().height, m_swapchain.Format(),
 	                                   vk::SampleCountFlagBits::e1, vk::ImageTiling::eOptimal,
 	                                   vk::ImageUsageFlagBits::eTransientAttachment | vk::ImageUsageFlagBits::eColorAttachment,
 	                                   vk::MemoryPropertyFlagBits::eDeviceLocal,
-	                                   (m_multisampling) ?
+	                                   (msaa) ?
 		                                   vk::ImageLayout::eColorAttachmentOptimal :
 		                                   vk::ImageLayout::ePresentSrcKHR,
 	                                   m_command, g_VkGenerator.GraphicsQueue());

@@ -51,6 +51,9 @@
     <ClCompile Include="..\src\include\imgui-1.70\imgui_demo.cpp">
       <Filter>Imgui</Filter>
     </ClCompile>
+    <ClCompile Include="..\src\Settings.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\src\include\Vk-Generator\VkGenerator.hpp">
@@ -127,6 +130,9 @@
     </ClInclude>
     <ClInclude Include="..\src\include\imgui-1.70\imstb_truetype.h">
       <Filter>Imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\include\Settings.h">
+      <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

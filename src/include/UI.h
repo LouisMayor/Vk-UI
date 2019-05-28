@@ -1,6 +1,7 @@
 #pragma once
 
 #include "VulkanObjects.h"
+#include "Settings.h"
 
 class UI
 {
@@ -15,19 +16,6 @@ public:
 	{
 		float x, y, z, w; // dummy
 	} UIDemoUBOData;
-
-	struct VulkanSettings
-	{
-		bool use_msaa = false;
-		int sample_level = 1;
-	} Settings;
-
-	// For Imgui to use and me to validate
-	struct ImguiDummyVulkanSettings
-	{
-		bool use_msaa = false;
-		int sample_level = 1;
-	} DummySettings;
 
 	UI() = default;
 
@@ -45,7 +33,9 @@ public:
 
 private:
 
-	void ValidateData();
+	void UpdateSettings();
+
+	Settings local_settings;
 
 	vk::Buffer              m_vert_buffer;
 	vk::Buffer              m_indi_buffer;

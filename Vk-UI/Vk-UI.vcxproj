@@ -142,6 +142,7 @@
     <ClCompile Include="..\src\InputManager.cpp" />
     <ClCompile Include="..\src\Main.cpp" />
     <ClCompile Include="..\src\ImguiDemo.cpp" />
+    <ClCompile Include="..\src\Settings.cpp" />
     <ClCompile Include="..\src\UI.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -157,6 +158,7 @@
     <ClInclude Include="..\src\include\imgui-1.70\imstb_rectpack.h" />
     <ClInclude Include="..\src\include\imgui-1.70\imstb_textedit.h" />
     <ClInclude Include="..\src\include\imgui-1.70\imstb_truetype.h" />
+    <ClInclude Include="..\src\include\Settings.h" />
     <ClInclude Include="..\src\include\UI.h" />
     <ClInclude Include="..\src\include\InputManager.h" />
     <ClInclude Include="..\src\include\Logger.h" />
