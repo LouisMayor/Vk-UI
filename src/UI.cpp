@@ -155,9 +155,19 @@ void UI::Destroy(vk::Device _device)
 		m_sampler = nullptr;
 	}
 
-	// cache
-	// _device.destroyPipeline();
-	// _device.destroyPipelineLayout();
+	if (m_vert_mem != nullptr)
+	{
+		_device.freeMemory(m_vert_mem);
+	}
+
+	if (m_indi_mem != nullptr)
+	{
+		_device.freeMemory(m_indi_mem);
+	}
+
+	m_vert.Destroy(_device);
+	m_frag.Destroy(_device);
+
 	m_pipeline.Destroy(_device);
 
 	if (m_desc_pool != nullptr)
