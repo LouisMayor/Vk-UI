@@ -209,6 +209,8 @@ void UI::Init(uint32_t _width, uint32_t _height, GLFWwindow* _window)
 	io.MouseDrawCursor         = true;
 	io.WantCaptureKeyboard     = true;
 	io.WantTextInput           = true;
+	io.WantSaveIniSettings     = false;
+	io.IniFilename             = "imgui.ini";
 
 	io.KeyMap[ImGuiKey_Tab]        = GLFW_KEY_TAB;
 	io.KeyMap[ImGuiKey_LeftArrow]  = GLFW_KEY_LEFT;
@@ -481,14 +483,27 @@ void UI::LoadResources(vk::Device         _device,
 	m_pipeline.CreateGraphicPipeline(_device, _pass);
 }
 
+bool load_frame = true;
+
+int round_up(int num, int factor)
+{
+	return num + factor - 1 - (num - 1) % factor;
+}
+
 void UI::PrepNextFrame(float _delta, float _total_time)
 {
 	ImGui::NewFrame();
 
+	// load but not save
+	if (load_frame)
+	{
+		ImGuiIO& io    = ImGui::GetIO();
+		io.IniFilename = nullptr;
+		load_frame     = !load_frame;
+	}
+
 	ImGui_ImplGlfw_UpdateMousePosAndButtons();
 	ImGui_ImplGlfw_UpdateMouseCursor();
-
-	ImGui::TextUnformatted("Imgui Example");
 
 	std::string cursor = "x: " + std::to_string(ImGui::GetMousePos().x) + " | y: " + std::to_string(ImGui::GetMousePos().y);
 	ImGui::TextUnformatted(cursor.c_str());
@@ -496,20 +511,59 @@ void UI::PrepNextFrame(float _delta, float _total_time)
 	std::string time = "time: " + std::to_string(_total_time);
 	ImGui::TextUnformatted(time.c_str());
 
+	ImGui::SetNextWindowSize(ImVec2(0, 0), ImGuiSetCond_FirstUseEver);
+	ImGui::Begin("Settings");
+	ImGui::Checkbox("Enable Multi-sampling", &DummySettings.use_msaa);
+	ImGui::SliderInt("Sample Level", &DummySettings.sample_level, 0, 16);
+	ImGui::End();
+
 	ImGui::SetNextWindowSize(ImVec2(200, 200), ImGuiSetCond_FirstUseEver);
 	ImGui::Begin("Example settings");
 
 	ImGui::Text("Some Variables");
-	ImGui::InputFloat("x", &UIDemoData.x, 2);
-	ImGui::SliderFloat("y", &UIDemoData.y, 0.0f, 100.0f);
-	ImGui::SliderFloat("z", &UIDemoData.z, 0.0f, 100.0f);
-	ImGui::SliderFloat("w", &UIDemoData.w, 0.0f, 100.0f);
+	ImGui::DragFloat("x", &UIDemoUBOData.x, 2.0f * _delta);
+	ImGui::SliderFloat("y", &UIDemoUBOData.y, 0.0f, 100.0f);
+	ImGui::SliderFloat("z", &UIDemoUBOData.z, 0.0f, 100.0f);
+	ImGui::SliderFloat("w", &UIDemoUBOData.w, 0.0f, 100.0f);
+
 	ImGui::End();
 
 	ImGui::SetNextWindowPos(ImVec2(650, 20), ImGuiSetCond_FirstUseEver);
 	ImGui::ShowDemoWindow();
 
+	ValidateData();
+
 	ImGui::Render();
+}
+
+// https://graphics.stanford.edu/~seander/bithacks.html#RoundUpPowerOf2
+unsigned long SampleCount(unsigned long v)
+{
+	v--;
+	v |= v >> 1;
+	v |= v >> 2;
+	v |= v >> 4;
+	v |= v >> 8;
+	v |= v >> 16;
+	v++;
+	return v;
+}
+
+void UI::ValidateData()
+{
+	if (Settings.sample_level != DummySettings.sample_level)
+	{
+		if (DummySettings.sample_level < 16)
+		{
+			if (DummySettings.sample_level > 0)
+			{
+				Settings.sample_level = static_cast<int>(SampleCount(DummySettings.sample_level));
+			}
+			DummySettings.sample_level = Settings.sample_level;
+		}
+	}
+
+	Settings.use_msaa = DummySettings.use_msaa;
 }
 
 void UI::Update(vk::Device _device, vk::PhysicalDevice _physical_device)

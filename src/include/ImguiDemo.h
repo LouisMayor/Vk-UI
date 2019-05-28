@@ -79,4 +79,7 @@ private:
 	UI m_ui_instance;
 
 	bool m_multisampling = false;
+
+	float m_total_time;
+	float m_frame_delta;
 };

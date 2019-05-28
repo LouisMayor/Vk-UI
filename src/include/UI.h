@@ -11,10 +11,23 @@ public:
 		float xTrans, yTrans;
 	} UIPushConstants;
 
-	struct UIData
+	struct UIUBOData
 	{
 		float x, y, z, w; // dummy
-	} UIDemoData;
+	} UIDemoUBOData;
+
+	struct VulkanSettings
+	{
+		bool use_msaa = false;
+		int sample_level = 1;
+	} Settings;
+
+	// For Imgui to use and me to validate
+	struct ImguiDummyVulkanSettings
+	{
+		bool use_msaa = false;
+		int sample_level = 1;
+	} DummySettings;
 
 	UI() = default;
 
@@ -31,6 +44,9 @@ public:
 	void Draw(VkRes::Command, int);
 
 private:
+
+	void ValidateData();
+
 	vk::Buffer              m_vert_buffer;
 	vk::Buffer              m_indi_buffer;
 	vk::DeviceMemory        m_vert_mem;
