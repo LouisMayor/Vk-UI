@@ -108,7 +108,7 @@ namespace VkRes
 			{
 				{},
 				_format,
-				_num_samples,
+				vk::SampleCountFlagBits::e1,
 				vk::AttachmentLoadOp::eDontCare,
 				vk::AttachmentStoreOp::eStore,
 				vk::AttachmentLoadOp::eDontCare,

@@ -81,4 +81,6 @@ private:
 
 	float m_total_time;
 	float m_frame_delta;
+
+	bool m_settings_updated = false;
 };

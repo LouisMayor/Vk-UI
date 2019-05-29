@@ -158,11 +158,31 @@ void UI::Destroy(vk::Device _device)
 	if (m_vert_mem != nullptr)
 	{
 		_device.freeMemory(m_vert_mem);
+		m_vert_mem = nullptr;
 	}
 
 	if (m_indi_mem != nullptr)
 	{
 		_device.freeMemory(m_indi_mem);
+		m_indi_mem = nullptr;
+	}
+
+	// destroy
+	if (m_indi_buffer != nullptr)
+	{
+		_device.destroyBuffer(m_indi_buffer);
+	}
+
+	// destroy
+	if (m_vert_buffer != nullptr)
+	{
+		_device.destroyBuffer(m_vert_buffer);
+	}
+
+	// destroy
+	if (m_vert_mem != nullptr)
+	{
+		_device.freeMemory(m_vert_mem);
 	}
 
 	m_vert.Destroy(_device);
@@ -181,6 +201,32 @@ void UI::Destroy(vk::Device _device)
 		_device.destroyDescriptorSetLayout(m_desc_set_layout);
 		m_desc_set_layout = nullptr;
 	}
+}
+
+void UI::Recreate(uint32_t _width, uint32_t _height, GLFWwindow* _window)
+{
+	m_width  = static_cast<float>(_width);
+	m_height = static_cast<float>(_height);
+	g_window = _window;
+
+	ImGui::CreateContext();
+
+	ImGuiIO& io = ImGui::GetIO();
+	io.BackendFlags |= ImGuiBackendFlags_HasMouseCursors;
+	io.BackendFlags |= ImGuiBackendFlags_HasSetMousePos;
+	io.ClipboardUserData       = _window;
+	io.DisplaySize             = ImVec2(m_width, m_height);
+	io.DisplayFramebufferScale = ImVec2(1.0f, 1.0f);
+	io.WantCaptureMouse        = true;
+	io.WantSetMousePos         = true;
+	io.MouseDrawCursor         = true;
+	io.WantCaptureKeyboard     = true;
+	io.WantTextInput           = true;
+	io.WantSaveIniSettings     = false;
+	io.IniFilename             = "imgui.ini";
+
+	m_vert_data = nullptr;
+	m_indi_data = nullptr;
 }
 
 void UI::Init(uint32_t _width, uint32_t _height, GLFWwindow* _window)
@@ -249,12 +295,13 @@ void UI::Init(uint32_t _width, uint32_t _height, GLFWwindow* _window)
 	g_PrevUserCallbackChar        = glfwSetCharCallback(_window, ImGui_ImplGlfw_CharCallback);
 }
 
-void UI::LoadResources(vk::Device         _device,
-                       vk::PhysicalDevice _physical_device,
-                       std::string_view   _shader_dir,
-                       VkRes::Command     _cmd,
-                       vk::RenderPass     _pass,
-                       vk::Queue          _queue)
+void UI::LoadResources(vk::Device              _device,
+                       vk::PhysicalDevice      _physical_device,
+                       std::string_view        _shader_dir,
+                       VkRes::Command          _cmd,
+                       vk::RenderPass          _pass,
+                       vk::Queue               _queue,
+                       vk::SampleCountFlagBits _samples)
 {
 	ImGuiIO& io = ImGui::GetIO();
 
@@ -476,7 +523,7 @@ void UI::LoadResources(vk::Device         _device,
 
 	m_pipeline.SetInputAssembler(&binding_desc, attri_desc, vk::PrimitiveTopology::eTriangleList, VK_FALSE);
 	m_pipeline.SetViewport({static_cast<uint32_t>(m_width), static_cast<uint32_t>(m_height)}, 0.0f, 1.0f);
-	m_pipeline.SetRasterizer(VK_TRUE, VK_TRUE, vk::CompareOp::eLess, vk::SampleCountFlagBits::e1, VK_FALSE);
+	m_pipeline.SetRasterizer(VK_TRUE, VK_TRUE, vk::CompareOp::eLess, _samples, VK_FALSE);
 	m_pipeline.SetShaders(stages);
 	m_pipeline.SetPushConstants<UIPushConstantData>(0, vk::ShaderStageFlagBits::eVertex);
 	m_pipeline.CreatePipelineLayout(_device, &m_desc_set_layout, 1, 1);
@@ -514,7 +561,7 @@ void UI::PrepNextFrame(float _delta, float _total_time)
 	ImGui::SetNextWindowSize(ImVec2(0, 0), ImGuiSetCond_FirstUseEver);
 	ImGui::Begin("Settings");
 	ImGui::Checkbox("Enable Multi-sampling", &local_settings.use_msaa);
-	ImGui::SliderInt("Sample Level", &local_settings.sample_level, 0, 16);
+	ImGui::SliderInt("Sample Level", &local_settings.sample_level, 2, 16);
 	ImGui::End();
 
 	ImGui::SetNextWindowSize(ImVec2(200, 200), ImGuiSetCond_FirstUseEver);
@@ -546,7 +593,7 @@ void UI::UpdateSettings()
 		}
 		local_settings.sample_level = Settings::Instance()->sample_level;
 	}
-	
+
 	Settings::Instance()->SetMSAA(local_settings.use_msaa);
 }
 
@@ -565,7 +612,7 @@ void UI::Update(vk::Device _device, vk::PhysicalDevice _physical_device)
 	if (m_vert_buffer == nullptr || vertex_buffer_size != imDrawData->TotalVtxCount)
 	{
 		// unmap
-		if (m_vert_data != nullptr)
+		if (m_vert_data != nullptr && m_vert_mem != nullptr)
 		{
 			_device.unmapMemory(m_vert_mem);
 			m_vert_data = nullptr;
@@ -575,12 +622,14 @@ void UI::Update(vk::Device _device, vk::PhysicalDevice _physical_device)
 		if (m_vert_buffer != nullptr)
 		{
 			_device.destroyBuffer(m_vert_buffer);
+			m_vert_buffer = nullptr;
 		}
 
 		// destroy
 		if (m_vert_mem != nullptr)
 		{
 			_device.freeMemory(m_vert_mem);
+			m_vert_mem = nullptr;
 		}
 
 		const auto buffer_data = VkRes::CreateBuffer(_device,
@@ -593,7 +642,7 @@ void UI::Update(vk::Device _device, vk::PhysicalDevice _physical_device)
 		m_vertex_count = imDrawData->TotalVtxCount;
 
 		// unmap
-		if (m_vert_data != nullptr)
+		if (m_vert_data != nullptr && m_vert_mem != nullptr)
 		{
 			_device.unmapMemory(m_vert_mem);
 			m_vert_data = nullptr;
@@ -606,7 +655,7 @@ void UI::Update(vk::Device _device, vk::PhysicalDevice _physical_device)
 	if (m_indi_buffer == nullptr || index_buffer_size != imDrawData->TotalIdxCount)
 	{
 		// unmap
-		if (m_indi_data != nullptr)
+		if (m_indi_data != nullptr && m_indi_mem != nullptr)
 		{
 			_device.unmapMemory(m_indi_mem);
 			m_indi_data = nullptr;
@@ -616,12 +665,14 @@ void UI::Update(vk::Device _device, vk::PhysicalDevice _physical_device)
 		if (m_indi_buffer != nullptr)
 		{
 			_device.destroyBuffer(m_indi_buffer);
+			m_indi_buffer = nullptr;
 		}
 
 		// destroy
-		if (m_indi_mem != nullptr)
+		if (m_indi_mem != nullptr && m_indi_mem != nullptr)
 		{
 			_device.freeMemory(m_indi_mem);
+			m_indi_mem = nullptr;
 		}
 
 		const auto buffer_data = VkRes::CreateBuffer(_device,

@@ -10,12 +10,12 @@ public:
 	{
 		float xScale, yScale;
 		float xTrans, yTrans;
-	} UIPushConstants;
+	}         UIPushConstants;
 
 	struct UIUBOData
 	{
 		float x, y, z, w; // dummy
-	} UIDemoUBOData;
+	}         UIDemoUBOData;
 
 	UI() = default;
 
@@ -23,13 +23,16 @@ public:
 
 	void Init(uint32_t, uint32_t, GLFWwindow*);
 
-	void LoadResources(vk::Device, vk::PhysicalDevice, std::string_view, VkRes::Command, vk::RenderPass, vk::Queue);
+	void LoadResources(vk::Device             , vk::PhysicalDevice, std::string_view, VkRes::Command, vk::RenderPass, vk::Queue,
+	                   vk::SampleCountFlagBits);
 
 	void PrepNextFrame(float, float);
 
 	void Update(vk::Device, vk::PhysicalDevice);
 
 	void Draw(VkRes::Command, int);
+
+	void Recreate(uint32_t, uint32_t, GLFWwindow*);
 
 private:
 

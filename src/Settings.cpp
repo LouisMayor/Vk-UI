@@ -2,6 +2,16 @@
 
 std::unique_ptr<Settings> Settings::m_instance = std::make_unique<Settings>();
 
+bool Settings::Updated(bool _has_responded = false)
+{
+	const bool tmp = m_updated;
+	if (_has_responded)
+	{
+		m_updated = false;
+	}
+	return tmp;
+}
+
 Settings* Settings::Instance()
 {
 	if (m_instance == nullptr)
@@ -14,7 +24,13 @@ Settings* Settings::Instance()
 
 void Settings::SetMSAA(const bool _value)
 {
-	use_msaa = _value;
+	const bool tmp = use_msaa;
+	use_msaa       = _value;
+
+	if (tmp != use_msaa)
+	{
+		m_updated = true;
+	}
 }
 
 // https://graphics.stanford.edu/~seander/bithacks.html#RoundUpPowerOf2
@@ -32,5 +48,16 @@ unsigned long SampleCount(unsigned long v)
 
 void Settings::SetSampleCount(const int _value)
 {
-	sample_level = static_cast<int>(SampleCount(_value));
+	const int tmp = sample_level;
+	sample_level  = static_cast<int>(SampleCount(_value));
+
+	if (tmp != sample_level)
+	{
+		m_updated = true;
+	}
+}
+
+vk::SampleCountFlagBits Settings::GetSampleCount() const
+{
+	return vk::SampleCountFlagBits(sample_level);
 }

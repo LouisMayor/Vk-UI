@@ -55,7 +55,7 @@ bool VkApp::ShouldStop()
 
 void VkApp::SetWindowTitle(std::string _title)
 {
-	m_window_title = std::move(_title);
+	m_window_title = _title;
 }
 
 void VkApp::Close()

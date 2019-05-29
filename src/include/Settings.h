@@ -1,6 +1,7 @@
 #pragma once
 
 #include <memory>
+#include <vulkan/vulkan.hpp>
 
 class Settings
 {
@@ -21,9 +22,14 @@ public:
 	// Sets multi-sampling anti aliasing sample count
 	void SetSampleCount(int);
 
+	vk::SampleCountFlagBits GetSampleCount() const;
+
+	bool Updated(bool);
+
 	bool use_msaa     = false;
 	int  sample_level = 1;
 
 private:
 	static std::unique_ptr<Settings> m_instance;
+	bool m_updated = false;
 };

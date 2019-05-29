@@ -52,7 +52,7 @@ namespace VkRes
 				&m_subpass_dependency
 			};
 
-			auto result = _device.createRenderPass(&m_pass_info, nullptr, &m_render_pass);
+			const auto result = _device.createRenderPass(&m_pass_info, nullptr, &m_render_pass);
 
 			assert(("Failed to create render pass", result == vk::Result::eSuccess));
 		}

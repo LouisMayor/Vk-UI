@@ -18,7 +18,7 @@ void VkImguiDemo::Setup()
 
 	m_ui_instance.Init(m_swapchain.Extent().width, m_swapchain.Extent().height, g_VkGenerator.WindowHdle());
 	m_ui_instance.LoadResources(g_VkGenerator.Device(), g_VkGenerator.PhysicalDevice(), m_shader_directory, m_command,
-	                            m_render_pass.Pass(), g_VkGenerator.GraphicsQueue());
+	                            m_render_pass.Pass(), g_VkGenerator.GraphicsQueue(), Settings::Instance()->GetSampleCount());
 
 	m_app_instance.SetWindowTitle("Vulkan ImGui Triangle Demo");
 	m_app_instance.Start();
@@ -37,9 +37,23 @@ void VkImguiDemo::Run()
 
 		m_app_instance.Update(m_frame_delta);
 		stop_execution = m_app_instance.ShouldStop();
+		m_settings_updated = Settings::Instance()->Updated(true);
+
+		if (m_settings_updated)
+		{
+			if (Settings::Instance()->use_msaa)
+			{
+				RecreateSwapchain();
+				m_ui_instance.Destroy(g_VkGenerator.Device());
+				m_ui_instance.Recreate(m_swapchain.Extent().width, m_swapchain.Extent().height, g_VkGenerator.WindowHdle());
+				m_ui_instance.LoadResources(g_VkGenerator.Device(), g_VkGenerator.PhysicalDevice(), m_shader_directory, m_command,
+					m_render_pass.Pass(), g_VkGenerator.GraphicsQueue(), Settings::Instance()->GetSampleCount());
+			}
+			m_settings_updated = !m_settings_updated;
+		}
 
 		RecordCmdBuffer();
-		SubmitQueue();
+ 		SubmitQueue();
 	}
 }
 
@@ -264,9 +278,7 @@ void VkImguiDemo::CreateRenderPasses()
 		m_backbuffer.GetAttachmentDesc()
 	};
 
-	// TODO: Multi sampling
-	const bool msaa = false;// Settings::Instance()->use_msaa;
-	if (msaa)
+	if (Settings::Instance()->use_msaa)
 	{
 		attachments.emplace_back(m_backbuffer.GetResolveAttachmentDesc());
 	}
@@ -274,7 +286,7 @@ void VkImguiDemo::CreateRenderPasses()
 	m_render_pass = VkRes::RenderPass(attachments,
 	                                  &colour_attachment, 1,
 	                                  nullptr,
-	                                  msaa ?
+	                                  Settings::Instance()->use_msaa ?
 		                                  &colour_resolve_attachment :
 		                                  nullptr, 1,
 	                                  vk::PipelineBindPoint::eGraphics, g_VkGenerator.Device());
@@ -287,10 +299,14 @@ void VkImguiDemo::CreateFrameBuffers()
 
 	for (uint32_t i = 0 ; i < image_views.size() ; ++i)
 	{
-		const std::vector<vk::ImageView> attachments =
+		std::vector<vk::ImageView> attachments;
+
+		if (Settings::Instance()->use_msaa && Settings::Instance()->GetSampleCount() > vk::SampleCountFlagBits::e1)
 		{
-			image_views[i]
-		};
+			attachments.push_back(m_backbuffer.GetImageView());
+		}
+
+		attachments.push_back(image_views[i]);
 
 		m_framebuffers[i] = VkRes::FrameBuffer(g_VkGenerator.Device(), attachments,
 		                                       m_render_pass.Pass(), m_swapchain.Extent(),
@@ -325,9 +341,14 @@ void VkImguiDemo::CreatePipelines()
 		m_frag.Set()
 	};
 
+	const bool                    msaa    = Settings::Instance()->use_msaa;
+	const vk::SampleCountFlagBits samples = msaa ?
+		                                        Settings::Instance()->GetSampleCount() :
+		                                        vk::SampleCountFlagBits::e1;
+
 	m_graphics_pipeline.SetInputAssembler(nullptr, {}, vk::PrimitiveTopology::eTriangleList, VK_FALSE);
 	m_graphics_pipeline.SetViewport(m_swapchain.Extent(), 0.0f, 1.0f);
-	m_graphics_pipeline.SetRasterizer(VK_TRUE, VK_TRUE, vk::CompareOp::eLess, vk::SampleCountFlagBits::e1, VK_FALSE);
+	m_graphics_pipeline.SetRasterizer(VK_TRUE, VK_TRUE, vk::CompareOp::eLess, samples, VK_FALSE);
 	m_graphics_pipeline.SetShaders(stages);
 	m_graphics_pipeline.CreatePipelineLayout(g_VkGenerator.Device(), nullptr, 0, 0);
 	m_graphics_pipeline.CreateGraphicPipeline(g_VkGenerator.Device(), m_render_pass.Pass());
@@ -335,12 +356,14 @@ void VkImguiDemo::CreatePipelines()
 
 void VkImguiDemo::CreateColourResources()
 {
-	// TODO: Multi sampling
-	const bool msaa = false;// Settings::Instance()->use_msaa;
+	const bool                    msaa    = Settings::Instance()->use_msaa;
+	const vk::SampleCountFlagBits samples = msaa ?
+		                                        Settings::Instance()->GetSampleCount() :
+		                                        vk::SampleCountFlagBits::e1;
 
 	m_backbuffer = VkRes::RenderTarget(g_VkGenerator.PhysicalDevice(), g_VkGenerator.Device(),
 	                                   m_swapchain.Extent().width, m_swapchain.Extent().height, m_swapchain.Format(),
-	                                   vk::SampleCountFlagBits::e1, vk::ImageTiling::eOptimal,
+	                                   samples, vk::ImageTiling::eOptimal,
 	                                   vk::ImageUsageFlagBits::eTransientAttachment | vk::ImageUsageFlagBits::eColorAttachment,
 	                                   vk::MemoryPropertyFlagBits::eDeviceLocal,
 	                                   (msaa) ?
@@ -389,6 +412,4 @@ void VkImguiDemo::RecreateSwapchain()
 	CreateRenderPasses();
 	CreateFrameBuffers();
 	CreatePipelines();
-
-	RecordCmdBuffer();
 }
