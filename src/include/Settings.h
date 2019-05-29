@@ -8,7 +8,7 @@ class Settings
 public:
 
 	explicit Settings(bool _use_msaa          = false,
-	                  int  _msaa_sample_count = 1) : use_msaa(_use_msaa),
+	                  int  _msaa_sample_count = 2) : use_msaa(_use_msaa),
 	                                                 sample_level(_msaa_sample_count)
 	{}
 
@@ -27,7 +27,7 @@ public:
 	bool Updated(bool);
 
 	bool use_msaa     = false;
-	int  sample_level = 1;
+	int  sample_level = 2;
 
 private:
 	static std::unique_ptr<Settings> m_instance;

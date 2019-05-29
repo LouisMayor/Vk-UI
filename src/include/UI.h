@@ -39,6 +39,7 @@ private:
 	void UpdateSettings();
 
 	Settings local_settings;
+	bool load_frame = true;
 
 	vk::Buffer              m_vert_buffer;
 	vk::Buffer              m_indi_buffer;

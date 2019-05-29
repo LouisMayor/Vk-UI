@@ -205,9 +205,9 @@ void UI::Destroy(vk::Device _device)
 
 void UI::Recreate(uint32_t _width, uint32_t _height, GLFWwindow* _window)
 {
-	m_width  = static_cast<float>(_width);
-	m_height = static_cast<float>(_height);
-	g_window = _window;
+	m_width    = static_cast<float>(_width);
+	m_height   = static_cast<float>(_height);
+	g_window   = _window;
 
 	ImGui::CreateContext();
 
@@ -530,13 +530,6 @@ void UI::LoadResources(vk::Device              _device,
 	m_pipeline.CreateGraphicPipeline(_device, _pass);
 }
 
-bool load_frame = true;
-
-int round_up(int num, int factor)
-{
-	return num + factor - 1 - (num - 1) % factor;
-}
-
 void UI::PrepNextFrame(float _delta, float _total_time)
 {
 	ImGui::NewFrame();
@@ -778,7 +771,6 @@ void UI::Draw(VkRes::Command _cmd, int _cmd_index)
 					{
 						(uint32_t)(cmd->ClipRect.z - cmd->ClipRect.x),
 						(uint32_t)(cmd->ClipRect.w - cmd->ClipRect.y)
-
 					}
 				};
 

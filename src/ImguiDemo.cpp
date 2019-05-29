@@ -16,9 +16,11 @@ void VkImguiDemo::Setup()
 	CreatePipelines();
 	CreateSyncObjects();
 
+	const bool msaa = Settings::Instance()->use_msaa;
+
 	m_ui_instance.Init(m_swapchain.Extent().width, m_swapchain.Extent().height, g_VkGenerator.WindowHdle());
 	m_ui_instance.LoadResources(g_VkGenerator.Device(), g_VkGenerator.PhysicalDevice(), m_shader_directory, m_command,
-	                            m_render_pass.Pass(), g_VkGenerator.GraphicsQueue(), Settings::Instance()->GetSampleCount());
+	                            m_render_pass.Pass(), g_VkGenerator.GraphicsQueue(), msaa ? Settings::Instance()->GetSampleCount() : vk::SampleCountFlagBits::e1);
 
 	m_app_instance.SetWindowTitle("Vulkan ImGui Triangle Demo");
 	m_app_instance.Start();
@@ -41,14 +43,14 @@ void VkImguiDemo::Run()
 
 		if (m_settings_updated)
 		{
-			if (Settings::Instance()->use_msaa)
-			{
-				RecreateSwapchain();
-				m_ui_instance.Destroy(g_VkGenerator.Device());
-				m_ui_instance.Recreate(m_swapchain.Extent().width, m_swapchain.Extent().height, g_VkGenerator.WindowHdle());
-				m_ui_instance.LoadResources(g_VkGenerator.Device(), g_VkGenerator.PhysicalDevice(), m_shader_directory, m_command,
-					m_render_pass.Pass(), g_VkGenerator.GraphicsQueue(), Settings::Instance()->GetSampleCount());
-			}
+			const bool msaa = Settings::Instance()->use_msaa;
+
+			RecreateSwapchain();
+			m_ui_instance.Destroy(g_VkGenerator.Device());
+			m_ui_instance.Recreate(m_swapchain.Extent().width, m_swapchain.Extent().height, g_VkGenerator.WindowHdle());
+			m_ui_instance.LoadResources(g_VkGenerator.Device(), g_VkGenerator.PhysicalDevice(), m_shader_directory, m_command,
+				m_render_pass.Pass(), g_VkGenerator.GraphicsQueue(), msaa ? Settings::Instance()->GetSampleCount() : vk::SampleCountFlagBits::e1);
+
 			m_settings_updated = !m_settings_updated;
 		}
 
