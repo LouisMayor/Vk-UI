@@ -8,9 +8,9 @@ extern Logger g_Logger;
 
 namespace VkRes
 {
-	static vk::ImageView CreateImageView(vk::Device _device, vk::Image            _image,
-	                                     vk::Format _format, vk::ImageAspectFlags _aspect_flags,
-	                                     uint32_t   _mips_level)
+	[[nodiscard]] static vk::ImageView CreateImageView(vk::Device _device, vk::Image            _image,
+	                                                   vk::Format _format, vk::ImageAspectFlags _aspect_flags,
+	                                                   uint32_t   _mips_level)
 	{
 		vk::ImageViewCreateInfo create_info =
 		{
@@ -31,9 +31,9 @@ namespace VkRes
 		return image_view;
 	}
 
-	static uint32_t FindMemoryType(vk::PhysicalDevice      _physical_device,
-	                               uint32_t                _filter_type,
-	                               vk::MemoryPropertyFlags _memory_property_flags)
+	[[nodiscard]] static uint32_t FindMemoryType(vk::PhysicalDevice      _physical_device,
+	                                             uint32_t                _filter_type,
+	                                             vk::MemoryPropertyFlags _memory_property_flags)
 	{
 		vk::PhysicalDeviceMemoryProperties mem_properties = _physical_device.getMemoryProperties();
 
@@ -51,16 +51,16 @@ namespace VkRes
 		return -1; // overflow
 	}
 
-	static std::tuple<vk::Image, vk::DeviceMemory> CreateImage(vk::Device                 _device,
-	                                                           vk::PhysicalDevice         _physical_device,
-	                                                           uint32_t                   _width,
-	                                                           uint32_t                   _height,
-	                                                           vk::Format                 _format,
-	                                                           uint32_t                   _mip_levels,
-	                                                           vk::SampleCountFlagBits    _sample_flag,
-	                                                           vk::ImageTiling            _tiling,
-	                                                           vk::ImageUsageFlags        _usage,
-	                                                           vk::MemoryPropertyFlagBits _properties)
+	[[nodiscard]] static std::tuple<vk::Image, vk::DeviceMemory> CreateImage(vk::Device                 _device,
+	                                                                         vk::PhysicalDevice         _physical_device,
+	                                                                         uint32_t                   _width,
+	                                                                         uint32_t                   _height,
+	                                                                         vk::Format                 _format,
+	                                                                         uint32_t                   _mip_levels,
+	                                                                         vk::SampleCountFlagBits    _sample_flag,
+	                                                                         vk::ImageTiling            _tiling,
+	                                                                         vk::ImageUsageFlags        _usage,
+	                                                                         vk::MemoryPropertyFlagBits _properties)
 	{
 		vk::ImageCreateInfo create_info =
 		{
@@ -100,7 +100,7 @@ namespace VkRes
 		return std::make_tuple(image, image_memory);
 	}
 
-	static bool HasStencilComponent(vk::Format _format)
+	[[nodiscard]] static bool HasStencilComponent(vk::Format _format)
 	{
 		return _format == vk::Format::eD32SfloatS8Uint || _format == vk::Format::eD24UnormS8Uint;
 	}
@@ -203,11 +203,11 @@ namespace VkRes
 		_cmd.EndSingleTimeCmds(_device, buffer, _queue);
 	}
 
-	static std::tuple<vk::Buffer, vk::DeviceMemory> CreateBuffer(vk::Device              _device,
-	                                                             vk::PhysicalDevice      _physical_device,
-	                                                             vk::DeviceSize          _size,
-	                                                             vk::BufferUsageFlags    _usage_flags,
-	                                                             vk::MemoryPropertyFlags _mem_flags)
+	[[nodiscard]] static std::tuple<vk::Buffer, vk::DeviceMemory> CreateBuffer(vk::Device              _device,
+	                                                                           vk::PhysicalDevice      _physical_device,
+	                                                                           vk::DeviceSize          _size,
+	                                                                           vk::BufferUsageFlags    _usage_flags,
+	                                                                           vk::MemoryPropertyFlags _mem_flags)
 
 	{
 		const vk::BufferCreateInfo create_info =

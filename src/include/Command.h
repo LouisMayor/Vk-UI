@@ -140,7 +140,7 @@ namespace VkRes
 			                                                     _first_instance);
 		}
 
-		vk::CommandBuffer& CommandBuffer(int _command_buffer_index)
+		[[nodiscard]] vk::CommandBuffer& CommandBuffer(int _command_buffer_index)
 		{
 			return m_command_buffers[_command_buffer_index];
 		}
@@ -206,17 +206,17 @@ namespace VkRes
 			_device.destroyCommandPool(m_command_pool);
 		}
 
-		vk::CommandPool& CommandPool()
+		[[nodiscard]] vk::CommandPool& CommandPool()
 		{
 			return m_command_pool;
 		}
 
-		std::vector<vk::CommandBuffer>& CommandBuffers()
+		[[nodiscard]] std::vector<vk::CommandBuffer>& CommandBuffers()
 		{
 			return m_command_buffers;
 		}
 
-		int CommandBufferCount() const
+		[[nodiscard]] int CommandBufferCount() const
 		{
 			return m_command_buffers.size();
 		}

@@ -28,7 +28,7 @@ namespace VkRes
 			}
 		}
 
-		vk::Semaphore SemaphoreInstance()
+		[[nodiscard]] vk::Semaphore SemaphoreInstance() const
 		{
 			return m_semaphore;
 		}

@@ -68,7 +68,7 @@ namespace VkRes
 			m_render_pass = nullptr;
 		}
 
-		vk::RenderPass Pass() const
+		[[nodiscard]] vk::RenderPass Pass() const
 		{
 			return m_render_pass;
 		}

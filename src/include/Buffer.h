@@ -16,6 +16,7 @@ namespace VkRes
 
 			m_buffer = std::get<0>(buffer_data);
 			m_memory = std::get<1>(buffer_data);
+			m_data   = nullptr;
 		}
 
 		void Destroy(vk::Device _device)
@@ -52,17 +53,17 @@ namespace VkRes
 			m_has_mapped = false;
 		}
 
-		bool HasBufferData() const
+		[[nodiscard]] bool HasBufferData() const
 		{
 			return m_buffer != nullptr;
 		}
 
-		void* Data() const
+		[[nodiscard]] void* Data() const
 		{
 			return m_data;
 		}
 
-		vk::Buffer BufferData() const
+		[[nodiscard]] vk::Buffer BufferData() const
 		{
 			return m_buffer;
 		}

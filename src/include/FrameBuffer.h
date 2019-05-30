@@ -41,7 +41,7 @@ namespace VkRes
 			m_framebuffer = nullptr;
 		}
 
-		vk::Framebuffer Buffer() const
+		[[nodiscard]] vk::Framebuffer Buffer() const
 		{
 			return m_framebuffer;
 		}

@@ -28,7 +28,7 @@ namespace VkRes
 			}
 		}
 
-		vk::Fence FenceInstance()
+		[[nodiscard]] vk::Fence FenceInstance() const
 		{
 			return m_fence;
 		}

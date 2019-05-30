@@ -64,22 +64,22 @@ namespace VkRes
 			}
 		}
 
-		vk::Image& GetImage()
+		[[nodiscard]] vk::Image& GetImage()
 		{
 			return m_image;
 		}
 
-		vk::ImageView& GetImageView()
+		[[nodiscard]] vk::ImageView& GetImageView()
 		{
 			return m_image_view;
 		}
 
-		vk::AttachmentDescription& GetAttachmentDesc()
+		[[nodiscard]] vk::AttachmentDescription& GetAttachmentDesc()
 		{
 			return m_attachment_desc;
 		}
 
-		vk::AttachmentDescription& GetResolveAttachmentDesc()
+		[[nodiscard]] vk::AttachmentDescription& GetResolveAttachmentDesc()
 		{
 			return m_resolve_attachment_desc;
 		}

@@ -32,7 +32,7 @@ namespace VkRes
 			}
 		}
 
-		vk::PipelineShaderStageCreateInfo Set() const
+		[[nodiscard]] vk::PipelineShaderStageCreateInfo Set() const
 		{
 			vk::PipelineShaderStageCreateInfo create_info =
 			{
@@ -46,17 +46,17 @@ namespace VkRes
 			return create_info;
 		}
 
-		std::string EntryPoint() const
+		[[nodiscard]] std::string EntryPoint() const
 		{
 			return m_entry_point;
 		}
 
-		std::vector<char> ShaderCode() const
+		[[nodiscard]] std::vector<char> ShaderCode() const
 		{
 			return m_shader_code;
 		}
 
-		vk::ShaderModule ShaderModule() const
+		[[nodiscard]] vk::ShaderModule ShaderModule() const
 		{
 			return m_shader_module;
 		}

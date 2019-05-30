@@ -253,12 +253,12 @@ namespace VkRes
 			assert(("Failed to create a graphics pipeline", result == vk::Result::eSuccess));
 		}
 
-		vk::PipelineLayout& PipelineLayout()
+		[[nodiscard]] vk::PipelineLayout& PipelineLayout()
 		{
 			return m_layout;
 		}
 
-		vk::Pipeline& Pipeline()
+		[[nodiscard]] vk::Pipeline& Pipeline()
 		{
 			return m_pipeline;
 		}

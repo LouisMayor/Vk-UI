@@ -74,12 +74,12 @@ namespace VkRes
 			CreateImageViews(_device);
 		}
 
-		vk::Extent2D Extent() const
+		[[nodiscard]] vk::Extent2D Extent() const
 		{
 			return m_swapchain_extent;
 		}
 
-		vk::Format Format() const
+		[[nodiscard]] vk::Format Format() const
 		{
 			return m_swapchain_image_format;
 		}
@@ -96,19 +96,19 @@ namespace VkRes
 			_device.destroySwapchainKHR(m_swapchain);
 		}
 
-		std::vector<vk::ImageView>& ImageViews()
+		[[nodiscard]] std::vector<vk::ImageView>& ImageViews()
 		{
 			return m_swapchain_image_views;
 		}
 
-		vk::SwapchainKHR& SwapchainInstance()
+		[[nodiscard]] vk::SwapchainKHR& SwapchainInstance()
 		{
 			return m_swapchain;
 		}
 
 	private:
 
-		vk::SurfaceFormatKHR ChooseSwapchainSurfaceFormat(std::vector<vk::SurfaceFormatKHR> _formats)
+		[[nodiscard]] vk::SurfaceFormatKHR ChooseSwapchainSurfaceFormat(std::vector<vk::SurfaceFormatKHR> _formats)
 		{
 			if (_formats.size() == 1 && _formats[0].format == vk::Format::eUndefined)
 			{
@@ -127,7 +127,7 @@ namespace VkRes
 			return _formats[0];
 		}
 
-		vk::PresentModeKHR ChooseSwapchainPresentMode(std::vector<vk::PresentModeKHR> _present_modes)
+		[[nodiscard]] vk::PresentModeKHR ChooseSwapchainPresentMode(std::vector<vk::PresentModeKHR> _present_modes)
 		{
 			vk::PresentModeKHR best_mode = vk::PresentModeKHR::eFifo;
 
@@ -147,7 +147,7 @@ namespace VkRes
 			return best_mode;
 		}
 
-		vk::Extent2D ChooseSwapchainExtent(vk::SurfaceCapabilitiesKHR _capabilities)
+		[[nodiscard]] vk::Extent2D ChooseSwapchainExtent(vk::SurfaceCapabilitiesKHR _capabilities)
 		{
 			if (_capabilities.currentExtent.width != std::numeric_limits<uint32_t>::max())
 			{
