@@ -134,6 +134,9 @@
     <ClInclude Include="..\src\include\Settings.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="..\src\include\Buffer.h">
+      <Filter>Header Files\Vulkan Resources</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="..\shaders\triangle_no_mesh.frag">

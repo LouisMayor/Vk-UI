@@ -20,7 +20,9 @@ void VkImguiDemo::Setup()
 
 	m_ui_instance.Init(m_swapchain.Extent().width, m_swapchain.Extent().height, g_VkGenerator.WindowHdle());
 	m_ui_instance.LoadResources(g_VkGenerator.Device(), g_VkGenerator.PhysicalDevice(), m_shader_directory, m_command,
-	                            m_render_pass.Pass(), g_VkGenerator.GraphicsQueue(), msaa ? Settings::Instance()->GetSampleCount() : vk::SampleCountFlagBits::e1);
+	                            m_render_pass.Pass(), g_VkGenerator.GraphicsQueue(), msaa ?
+		                                                                                 Settings::Instance()->GetSampleCount() :
+		                                                                                 vk::SampleCountFlagBits::e1);
 
 	m_app_instance.SetWindowTitle("Vulkan ImGui Triangle Demo");
 	m_app_instance.Start();
@@ -38,7 +40,7 @@ void VkImguiDemo::Run()
 		init_time     = m_total_time;
 
 		m_app_instance.Update(m_frame_delta);
-		stop_execution = m_app_instance.ShouldStop();
+		stop_execution     = m_app_instance.ShouldStop();
 		m_settings_updated = Settings::Instance()->Updated(true);
 
 		if (m_settings_updated)
@@ -47,15 +49,18 @@ void VkImguiDemo::Run()
 
 			RecreateSwapchain();
 			m_ui_instance.Destroy(g_VkGenerator.Device());
-			m_ui_instance.Recreate(m_swapchain.Extent().width, m_swapchain.Extent().height, g_VkGenerator.WindowHdle());
+			m_ui_instance.Recreate(g_VkGenerator.Device(), m_swapchain.Extent().width, m_swapchain.Extent().height, g_VkGenerator.WindowHdle());
 			m_ui_instance.LoadResources(g_VkGenerator.Device(), g_VkGenerator.PhysicalDevice(), m_shader_directory, m_command,
-				m_render_pass.Pass(), g_VkGenerator.GraphicsQueue(), msaa ? Settings::Instance()->GetSampleCount() : vk::SampleCountFlagBits::e1);
+			                            m_render_pass.Pass(), g_VkGenerator.GraphicsQueue(), msaa ?
+				                                                                                 Settings::Instance()->
+				                                                                                 GetSampleCount() :
+				                                                                                 vk::SampleCountFlagBits::e1);
 
 			m_settings_updated = !m_settings_updated;
 		}
 
 		RecordCmdBuffer();
- 		SubmitQueue();
+		SubmitQueue();
 	}
 }
 

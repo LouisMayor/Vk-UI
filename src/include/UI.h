@@ -23,7 +23,9 @@ public:
 
 	void Init(uint32_t, uint32_t, GLFWwindow*);
 
-	void LoadResources(vk::Device             , vk::PhysicalDevice, std::string_view, VkRes::Command, vk::RenderPass, vk::Queue,
+	void LoadResources(vk::Device             , vk::PhysicalDevice,
+	                   std::string_view       , VkRes::Command    ,
+	                   vk::RenderPass         , vk::Queue         ,
 	                   vk::SampleCountFlagBits);
 
 	void PrepNextFrame(float, float);
@@ -32,29 +34,25 @@ public:
 
 	void Draw(VkRes::Command, int);
 
-	void Recreate(uint32_t, uint32_t, GLFWwindow*);
+	void Recreate(vk::Device, uint32_t, uint32_t, GLFWwindow*);
 
 private:
 
 	void UpdateSettings();
 
 	Settings local_settings;
-	bool load_frame = true;
+	bool     load_frame = true;
 
-	vk::Buffer              m_vert_buffer;
-	vk::Buffer              m_indi_buffer;
-	vk::DeviceMemory        m_vert_mem;
-	vk::DeviceMemory        m_indi_mem;
-	void*                   m_vert_data;
-	void*                   m_indi_data;
 	vk::Sampler             m_sampler;
 	vk::DeviceMemory        m_font_mem;
 	vk::Image               m_font_image;
 	vk::ImageView           m_font_image_view;
-	VkRes::GraphicsPipeline m_pipeline;
 	vk::DescriptorPool      m_desc_pool;
 	vk::DescriptorSetLayout m_desc_set_layout;
 	vk::DescriptorSet       m_desc_set;
+	VkRes::GraphicsPipeline m_pipeline;
+	VkRes::Buffer           m_vertex_buffer;
+	VkRes::Buffer           m_index_buffer;
 	VkRes::Shader           m_vert;
 	VkRes::Shader           m_frag;
 	float                   m_width;

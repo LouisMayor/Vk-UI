@@ -119,18 +119,6 @@ void UI::Destroy(vk::Device _device)
 {
 	ImGui::DestroyContext();
 
-	if (m_vert_buffer != nullptr)
-	{
-		_device.destroyBuffer(m_vert_buffer);
-		m_vert_buffer = nullptr;
-	}
-
-	if (m_indi_buffer != nullptr)
-	{
-		_device.destroyBuffer(m_indi_buffer);
-		m_indi_buffer = nullptr;
-	}
-
 	if (m_font_image != nullptr)
 	{
 		_device.destroyImage(m_font_image);
@@ -155,35 +143,8 @@ void UI::Destroy(vk::Device _device)
 		m_sampler = nullptr;
 	}
 
-	if (m_vert_mem != nullptr)
-	{
-		_device.freeMemory(m_vert_mem);
-		m_vert_mem = nullptr;
-	}
-
-	if (m_indi_mem != nullptr)
-	{
-		_device.freeMemory(m_indi_mem);
-		m_indi_mem = nullptr;
-	}
-
-	// destroy
-	if (m_indi_buffer != nullptr)
-	{
-		_device.destroyBuffer(m_indi_buffer);
-	}
-
-	// destroy
-	if (m_vert_buffer != nullptr)
-	{
-		_device.destroyBuffer(m_vert_buffer);
-	}
-
-	// destroy
-	if (m_vert_mem != nullptr)
-	{
-		_device.freeMemory(m_vert_mem);
-	}
+	m_vertex_buffer.Destroy(_device);
+	m_index_buffer.Destroy(_device);
 
 	m_vert.Destroy(_device);
 	m_frag.Destroy(_device);
@@ -203,11 +164,11 @@ void UI::Destroy(vk::Device _device)
 	}
 }
 
-void UI::Recreate(uint32_t _width, uint32_t _height, GLFWwindow* _window)
+void UI::Recreate(vk::Device _device, uint32_t _width, uint32_t _height, GLFWwindow* _window)
 {
-	m_width    = static_cast<float>(_width);
-	m_height   = static_cast<float>(_height);
-	g_window   = _window;
+	m_width  = static_cast<float>(_width);
+	m_height = static_cast<float>(_height);
+	g_window = _window;
 
 	ImGui::CreateContext();
 
@@ -225,8 +186,8 @@ void UI::Recreate(uint32_t _width, uint32_t _height, GLFWwindow* _window)
 	io.WantSaveIniSettings     = false;
 	io.IniFilename             = "imgui.ini";
 
-	m_vert_data = nullptr;
-	m_indi_data = nullptr;
+	m_vertex_buffer.Destroy(_device);
+	m_index_buffer.Destroy(_device);
 }
 
 void UI::Init(uint32_t _width, uint32_t _height, GLFWwindow* _window)
@@ -602,87 +563,30 @@ void UI::Update(vk::Device _device, vk::PhysicalDevice _physical_device)
 		return;
 	}
 
-	if (m_vert_buffer == nullptr || vertex_buffer_size != imDrawData->TotalVtxCount)
+	if (!m_vertex_buffer.HasBufferData() || vertex_buffer_size != imDrawData->TotalVtxCount)
 	{
-		// unmap
-		if (m_vert_data != nullptr && m_vert_mem != nullptr)
-		{
-			_device.unmapMemory(m_vert_mem);
-			m_vert_data = nullptr;
-		}
+		m_vertex_buffer.Destroy(_device);
 
-		// destroy
-		if (m_vert_buffer != nullptr)
-		{
-			_device.destroyBuffer(m_vert_buffer);
-			m_vert_buffer = nullptr;
-		}
+		m_vertex_buffer = VkRes::Buffer(_device, _physical_device, vertex_buffer_size, vk::BufferUsageFlagBits::eVertexBuffer);
+		m_vertex_count  = imDrawData->TotalVtxCount;
 
-		// destroy
-		if (m_vert_mem != nullptr)
-		{
-			_device.freeMemory(m_vert_mem);
-			m_vert_mem = nullptr;
-		}
+		m_vertex_buffer.Unmap(_device);
 
-		const auto buffer_data = VkRes::CreateBuffer(_device,
-		                                             _physical_device, vertex_buffer_size,
-		                                             vk::BufferUsageFlagBits::eVertexBuffer,
-		                                             vk::MemoryPropertyFlagBits::eHostVisible);
-
-		m_vert_buffer  = std::get<0>(buffer_data);
-		m_vert_mem     = std::get<1>(buffer_data);
-		m_vertex_count = imDrawData->TotalVtxCount;
-
-		// unmap
-		if (m_vert_data != nullptr && m_vert_mem != nullptr)
-		{
-			_device.unmapMemory(m_vert_mem);
-			m_vert_data = nullptr;
-		}
-
-		// map
-		_device.mapMemory(m_vert_mem, 0, VK_WHOLE_SIZE, {}, &m_vert_data);
+		m_vertex_buffer.Map(_device);
 	}
 
-	if (m_indi_buffer == nullptr || index_buffer_size != imDrawData->TotalIdxCount)
+	if (!m_index_buffer.HasBufferData() || index_buffer_size != imDrawData->TotalIdxCount)
 	{
-		// unmap
-		if (m_indi_data != nullptr && m_indi_mem != nullptr)
-		{
-			_device.unmapMemory(m_indi_mem);
-			m_indi_data = nullptr;
-		}
+		m_index_buffer.Destroy(_device);
 
-		// destroy
-		if (m_indi_buffer != nullptr)
-		{
-			_device.destroyBuffer(m_indi_buffer);
-			m_indi_buffer = nullptr;
-		}
+		m_index_buffer = VkRes::Buffer(_device, _physical_device, index_buffer_size, vk::BufferUsageFlagBits::eIndexBuffer);
+		m_index_count  = imDrawData->TotalIdxCount;
 
-		// destroy
-		if (m_indi_mem != nullptr && m_indi_mem != nullptr)
-		{
-			_device.freeMemory(m_indi_mem);
-			m_indi_mem = nullptr;
-		}
-
-		const auto buffer_data = VkRes::CreateBuffer(_device,
-		                                             _physical_device, index_buffer_size,
-		                                             vk::BufferUsageFlagBits::eIndexBuffer,
-		                                             vk::MemoryPropertyFlagBits::eHostVisible);
-
-		m_indi_buffer = std::get<0>(buffer_data);
-		m_indi_mem    = std::get<1>(buffer_data);
-		m_index_count = imDrawData->TotalIdxCount;
-
-		// map
-		_device.mapMemory(m_indi_mem, 0, VK_WHOLE_SIZE, {}, &m_indi_data);
+		m_index_buffer.Map(_device);
 	}
 
-	ImDrawVert* vtxDst = (ImDrawVert*)m_vert_data;
-	ImDrawIdx*  idxDst = (ImDrawIdx*)m_indi_data;
+	ImDrawVert* vtxDst = (ImDrawVert*)m_vertex_buffer.Data();
+	ImDrawIdx*  idxDst = (ImDrawIdx*)m_index_buffer.Data();
 
 	for (int i = 0 ; i < imDrawData->CmdListsCount ; ++i)
 	{
@@ -693,26 +597,8 @@ void UI::Update(vk::Device _device, vk::PhysicalDevice _physical_device)
 		idxDst += cmd_list->IdxBuffer.Size;
 	}
 
-	vk::MappedMemoryRange flush_vert =
-	{
-		m_vert_mem,
-		0,
-		VK_WHOLE_SIZE
-	};
-
-	vk::MappedMemoryRange flush_indi =
-	{
-		m_indi_mem,
-		0,
-		VK_WHOLE_SIZE
-	};
-
-	// flush
-	const auto flush_vert_result = _device.flushMappedMemoryRanges(1, &flush_vert);
-	assert(("Failed to flush mapped memory", flush_vert_result == vk::Result::eSuccess));
-
-	const auto flush_indi_result = _device.flushMappedMemoryRanges(1, &flush_indi);
-	assert(("Failed to flush mapped memory", flush_indi_result == vk::Result::eSuccess));
+	m_vertex_buffer.Flush(_device);
+	m_index_buffer.Flush(_device);
 }
 
 void UI::Draw(VkRes::Command _cmd, int _cmd_index)
@@ -753,8 +639,8 @@ void UI::Draw(VkRes::Command _cmd, int _cmd_index)
 	{
 		vk::DeviceSize offsets[1] = {0};
 
-		cmd_buffer.bindVertexBuffers(0, 1, &m_vert_buffer, offsets);
-		cmd_buffer.bindIndexBuffer(m_indi_buffer, 0, vk::IndexType::eUint16);
+		cmd_buffer.bindVertexBuffers(0, 1, &m_vertex_buffer.BufferData(), offsets);
+		cmd_buffer.bindIndexBuffer(m_index_buffer.BufferData(), 0, vk::IndexType::eUint16);
 
 		for (int i = 0 ; i < imDrawData->CmdListsCount ; ++i)
 		{
