@@ -554,7 +554,7 @@ void UI::PrepNextFrame(float _delta, float _total_time)
 	ImGui::SetNextWindowSize(ImVec2(0, 0), ImGuiSetCond_FirstUseEver);
 	ImGui::Begin("Settings");
 	ImGui::Checkbox("Enable Multi-sampling", &local_settings.use_msaa);
-	ImGui::SliderInt("Sample Level", &local_settings.sample_level, 2, 16);
+	ImGui::SliderInt("Sample Level", &local_settings.sample_level, 2, 8);
 	ImGui::End();
 
 	ImGui::SetNextWindowSize(ImVec2(200, 200), ImGuiSetCond_FirstUseEver);
