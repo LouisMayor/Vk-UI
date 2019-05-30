@@ -1,5 +1,10 @@
 # Vk-UI
-Imgui implemented for Vulkan
+Imgui implemented for Vulkan, based of my early vulkan project, 'Vk-Triangle'.
+
+Thanks to
+- Sascha Willems
+
+### Features:
 - ImGui based UI
 - Supports multisampling, which can be changed through the UI
 
