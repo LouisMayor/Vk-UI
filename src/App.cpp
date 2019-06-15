@@ -25,6 +25,8 @@ void VkApp::Update(float _delta)
 	m_last_delta = _delta;
 	m_total_time += _delta;
 
+	m_input_manager.Update();
+
 	UpdateWindowTitle();
 }
 

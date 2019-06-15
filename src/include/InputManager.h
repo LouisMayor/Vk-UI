@@ -109,6 +109,8 @@ class InputManager
 public:
 	void InitialiseInput(GLFWwindow*);
 
+	void Update();
+
 	EKeyState ReportKeyState(EKeyCodes _key_code);
 
 	bool KeyHit(EKeyCodes _keyCode);
