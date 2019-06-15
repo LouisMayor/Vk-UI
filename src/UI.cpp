@@ -137,11 +137,13 @@ void UI::Destroy(vk::Device _device)
 		m_font_mem = nullptr;
 	}
 
-	if (m_sampler != nullptr)
-	{
-		_device.destroySampler(m_sampler);
-		m_sampler = nullptr;
-	}
+	//if (m_sampler != nullptr)
+	//{
+	//	_device.destroySampler(m_sampler);
+	//	m_sampler = nullptr;
+	//}
+
+	m_sampler.Destroy(_device);
 
 	m_vertex_buffer.Destroy(_device);
 	m_index_buffer.Destroy(_device);
@@ -351,29 +353,7 @@ void UI::LoadResources(vk::Device              _device,
 	_device.destroyBuffer(staging_buffer);
 	_device.freeMemory(staging_buffer_mem);
 
-	// Sampler Code
-	vk::SamplerCreateInfo sampler_create_info =
-	{
-		{},
-		vk::Filter::eLinear,
-		vk::Filter::eLinear,
-		vk::SamplerMipmapMode::eLinear,
-		vk::SamplerAddressMode::eClampToEdge,
-		vk::SamplerAddressMode::eClampToEdge,
-		vk::SamplerAddressMode::eClampToEdge,
-		0,
-		0,
-		0,
-		0,
-		vk::CompareOp::eNever,
-		0,
-		0,
-		vk::BorderColor::eFloatOpaqueWhite,
-		0
-	};
-
-	const auto sample_result = _device.createSampler(&sampler_create_info, nullptr, &m_sampler);
-	assert(("Failed to create sampler", sample_result == vk::Result::eSuccess));
+	m_sampler = VkRes::Sampler<vk::Filter::eLinear>(_device, vk::SamplerAddressMode::eClampToEdge, 0.0f, VK_FALSE, 0.0f);
 
 	// Descriptor Pool Code
 	const std::vector<vk::DescriptorPoolSize> pool_sizes =
@@ -430,7 +410,7 @@ void UI::LoadResources(vk::Device              _device,
 
 	const vk::DescriptorImageInfo desc_image_info =
 	{
-		m_sampler,
+		m_sampler.SamplerInstance(),
 		m_font_image_view,
 		vk::ImageLayout::eShaderReadOnlyOptimal
 	};
