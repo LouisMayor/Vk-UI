@@ -119,29 +119,7 @@ void UI::Destroy(vk::Device _device)
 {
 	ImGui::DestroyContext();
 
-	if (m_font_image != nullptr)
-	{
-		_device.destroyImage(m_font_image);
-		m_font_image = nullptr;
-	}
-
-	if (m_font_image_view != nullptr)
-	{
-		_device.destroyImageView(m_font_image_view);
-		m_font_image_view = nullptr;
-	}
-
-	if (m_font_mem != nullptr)
-	{
-		_device.freeMemory(m_font_mem);
-		m_font_mem = nullptr;
-	}
-
-	//if (m_sampler != nullptr)
-	//{
-	//	_device.destroySampler(m_sampler);
-	//	m_sampler = nullptr;
-	//}
+	m_font_tex.Destroy(_device);
 
 	m_sampler.Destroy(_device);
 
@@ -268,91 +246,7 @@ void UI::LoadResources(vk::Device              _device,
 {
 	ImGuiIO& io = ImGui::GetIO();
 
-	unsigned char* fontData;
-	int            texWidth, texHeight;
-	io.Fonts->GetTexDataAsRGBA32(&fontData, &texWidth, &texHeight);
-	const vk::DeviceSize upload_size = texWidth * texHeight * 4 * sizeof(char);
-
-	const auto image_data = VkRes::CreateImage(_device,
-	                                           _physical_device,
-	                                           texWidth,
-	                                           texHeight,
-	                                           vk::Format::eR8G8B8A8Unorm,
-	                                           1,
-	                                           vk::SampleCountFlagBits::e1,
-	                                           vk::ImageTiling::eOptimal,
-	                                           vk::ImageUsageFlagBits::eSampled | vk::ImageUsageFlagBits::eTransferDst,
-	                                           vk::MemoryPropertyFlagBits::eDeviceLocal);
-
-	m_font_image = std::get<0>(image_data);
-	m_font_mem   = std::get<1>(image_data);
-
-	m_font_image_view = VkRes::CreateImageView(_device,
-	                                           m_font_image,
-	                                           vk::Format::eR8G8B8A8Unorm,
-	                                           vk::ImageAspectFlagBits::eColor,
-	                                           1);
-
-	const auto buffer_data = VkRes::CreateBuffer(_device,
-	                                             _physical_device, upload_size,
-	                                             vk::BufferUsageFlagBits::eTransferSrc,
-	                                             vk::MemoryPropertyFlagBits::eHostVisible |
-	                                             vk::MemoryPropertyFlagBits::eHostCoherent);
-
-	const vk::Buffer       staging_buffer     = std::get<0>(buffer_data);
-	const vk::DeviceMemory staging_buffer_mem = std::get<1>(buffer_data);
-	void*                  mapped             = nullptr;
-
-	// map
-	const auto map_result = _device.mapMemory(staging_buffer_mem, 0, VK_WHOLE_SIZE, {}, &mapped);
-	assert(("Failed to map memory", map_result == vk::Result::eSuccess));
-
-	std::memcpy(mapped, fontData, upload_size);
-
-	// unmap
-	if (mapped != nullptr)
-	{
-		_device.unmapMemory(staging_buffer_mem);
-		mapped = nullptr;
-	}
-
-	const auto cmd_buffer = _cmd.BeginSingleTimeCmds(_device);
-
-	VkRes::TransitionImageLayout(cmd_buffer,
-	                             m_font_image,
-	                             vk::Format::eR8G8B8A8Unorm,
-	                             vk::ImageLayout::eUndefined,
-	                             vk::ImageLayout::eTransferDstOptimal,
-	                             1);
-
-	const vk::BufferImageCopy copy_region =
-	{
-		0,
-		0,
-		0,
-		{vk::ImageAspectFlagBits::eColor, 0, 0, 1},
-		{},
-		{static_cast<uint32_t>(texWidth), static_cast<uint32_t>(texHeight), 1}
-	};
-
-	cmd_buffer.copyBufferToImage(staging_buffer,
-	                             m_font_image,
-	                             vk::ImageLayout::eTransferDstOptimal,
-	                             1,
-	                             &copy_region);
-
-	VkRes::TransitionImageLayout(cmd_buffer,
-	                             m_font_image,
-	                             vk::Format::eR8G8B8A8Unorm,
-	                             vk::ImageLayout::eTransferDstOptimal,
-	                             vk::ImageLayout::eShaderReadOnlyOptimal,
-	                             1);
-
-	_cmd.EndSingleTimeCmds(_device, cmd_buffer, _queue);
-
-	_device.destroyBuffer(staging_buffer);
-	_device.freeMemory(staging_buffer_mem);
-
+	m_font_tex = VkRes::Texture<VkRes::ETextureLoader::Imgui>(_device, _physical_device, _cmd, _queue);
 	m_sampler = VkRes::Sampler<vk::Filter::eLinear>(_device, vk::SamplerAddressMode::eClampToEdge, 0.0f, VK_FALSE, 0.0f);
 
 	// Descriptor Pool Code
@@ -411,7 +305,7 @@ void UI::LoadResources(vk::Device              _device,
 	const vk::DescriptorImageInfo desc_image_info =
 	{
 		m_sampler.SamplerInstance(),
-		m_font_image_view,
+		m_font_tex.View(),
 		vk::ImageLayout::eShaderReadOnlyOptimal
 	};
 

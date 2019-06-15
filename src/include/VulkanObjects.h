@@ -11,3 +11,4 @@
 #include "Semaphore.h"
 #include "Buffer.h"
 #include "Sampler.h"
+#include "Texture.h"
