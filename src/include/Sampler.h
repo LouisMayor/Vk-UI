@@ -2,7 +2,7 @@
 
 namespace VkRes
 {
-	template <vk::Filter T> class Sampler
+	template <vk::Filter filter_type> class Sampler
 	{
 	public:
 
@@ -17,20 +17,15 @@ namespace VkRes
 			vk::Filter            filter;
 			vk::SamplerMipmapMode mipSampler;
 
-			if constexpr (T == vk::Filter::eLinear)
+			if constexpr (filter_type == vk::Filter::eLinear)
 			{
 				filter     = vk::Filter::eLinear;
 				mipSampler = vk::SamplerMipmapMode::eLinear;
 			}
-			else if constexpr (T == vk::Filter::eNearest)
+			else if constexpr (filter_type == vk::Filter::eNearest)
 			{
 				filter     = vk::Filter::eNearest;
 				mipSampler = vk::SamplerMipmapMode::eNearest;
-			}
-			else
-			{
-				filter     = vk::Filter::eLinear;
-				mipSampler = vk::SamplerMipmapMode::eLinear;
 			}
 
 			const vk::SamplerCreateInfo sampler_create_info =

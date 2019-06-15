@@ -43,7 +43,6 @@ private:
 	Settings local_settings;
 	bool     load_frame = true;
 
-	//vk::Sampler                         m_sampler;
 	vk::DeviceMemory                    m_font_mem;
 	vk::Image                           m_font_image;
 	vk::ImageView                       m_font_image_view;
